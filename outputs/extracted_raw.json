@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "full_name": "",
+    "dob": "",
+    "mobile": "",
+    "gender": "female",
+    "business_name": "Name Of (ompany_"
+  },
+  "tables": {
+    "monthly_income": {
+      "monthly_income": null,
+      "proposed_rent": null,
+      "net_income": null
+    }
+  },
+  "signatures": {
+    "proposed_by": "[SIGNED]",
+    "guarantor_1": "[SIGNED]",
+    "applicant": "[NOT_SIGNED]"
+  },
+  "stamps": {
+    "official_stamp": "[NO_STAMP]"
+  },
+  "meta": {
+    "page_count": 10
+  }
+}

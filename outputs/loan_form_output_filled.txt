@@ -1,0 +1,15 @@
+Auto-filled PDF placeholder
+
+Extracted values:
+- full_name: 
+- dob: 
+- mobile: 
+- gender: female
+- business_name: Name Of (ompany_
+- monthly_income.monthly_income: None
+- monthly_income.proposed_rent: None
+- monthly_income.net_income: None
+- signature.proposed_by: [SIGNED]
+- signature.guarantor_1: [SIGNED]
+- signature.applicant: [NOT_SIGNED]
+- stamp.official_stamp: [NO_STAMP]

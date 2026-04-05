@@ -1,0 +1,74 @@
+{
+  "fields": [
+    {
+      "name": "full_name",
+      "page": 1,
+      "bbox": [120, 155, 980, 215],
+      "type": "text"
+    },
+    {
+      "name": "dob",
+      "page": 1,
+      "bbox": [120, 230, 450, 285],
+      "type": "text"
+    },
+    {
+      "name": "mobile",
+      "page": 1,
+      "bbox": [510, 230, 980, 285],
+      "type": "text"
+    },
+    {
+      "name": "gender",
+      "page": 1,
+      "bbox": [120, 300, 380, 360],
+      "type": "checkbox",
+      "value_map": {
+        "checked": "male",
+        "unchecked": "female"
+      }
+    },
+    {
+      "name": "business_name",
+      "page": 2,
+      "bbox": [120, 450, 980, 520],
+      "type": "text"
+    }
+  ],
+  "tables": [
+    {
+      "name": "monthly_income",
+      "page": 6,
+      "bbox": [80, 200, 1020, 880],
+      "schema": {
+        "monthly_income": "Monthly Income",
+        "proposed_rent": "Proposed Rent",
+        "net_income": "Net Income"
+      }
+    }
+  ],
+  "signatures": [
+    {
+      "name": "proposed_by",
+      "page": 6,
+      "bbox": [100, 950, 500, 1160]
+    },
+    {
+      "name": "guarantor_1",
+      "page": 10,
+      "bbox": [100, 900, 500, 1120]
+    },
+    {
+      "name": "applicant",
+      "page": 11,
+      "bbox": [550, 900, 980, 1120]
+    }
+  ],
+  "stamps": [
+    {
+      "name": "official_stamp",
+      "page": 6,
+      "bbox": [520, 920, 980, 1260]
+    }
+  ]
+}
