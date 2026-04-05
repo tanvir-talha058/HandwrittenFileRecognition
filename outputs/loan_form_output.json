@@ -4,7 +4,7 @@
     "dob": "",
     "mobile": "",
     "gender": "female",
-    "business_name": "Name Of (ompany_"
+    "business_name": ""
   },
   "tables": {
     "monthly_income": {
@@ -22,6 +22,10 @@
     "official_stamp": "[NO_STAMP]"
   },
   "meta": {
-    "page_count": 10
+    "page_count": 10,
+    "source_file": "Home_Loan_-_Optima_ID_111060_2_20260405_162215.pdf",
+    "template_file": "Home_Loan_Booklet.pdf",
+    "input_type": "pdf",
+    "parsed_at": "2026-04-05T16:24:11"
   }
 }

@@ -5,7 +5,7 @@ Extracted values:
 - dob: 
 - mobile: 
 - gender: female
-- business_name: Name Of (ompany_
+- business_name: 
 - monthly_income.monthly_income: None
 - monthly_income.proposed_rent: None
 - monthly_income.net_income: None
