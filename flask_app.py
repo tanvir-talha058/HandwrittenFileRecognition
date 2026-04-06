@@ -14,17 +14,10 @@ from flask import (
 from werkzeug.utils import secure_filename
 
 from config import AppConfig
-from modules.document_loader import (
-    SUPPORTED_INPUT_SUFFIXES,
-    is_supported_input_file,
-    load_document_images,
-)
-from modules.formatter import save_excel, save_filled_pdf, save_json
+from modules.document_loader import SUPPORTED_INPUT_SUFFIXES, is_supported_input_file
+from modules.form_pipeline import PREVIEW_PREFIX, run_form_ocr_pipeline
+from modules.formatter import save_excel, save_filled_pdf, save_json, save_text
 from modules.ocr_engine import HybridOCREngine
-from modules.parser import LoanFormParser
-from modules.pdf_processor import pdf_to_images
-from modules.preprocess import pil_to_bgr
-from modules.template_mapper import TemplateMapper
 
 
 app = Flask(__name__)
@@ -32,29 +25,43 @@ app.secret_key = "loan-form-secret-key"
 
 cfg = AppConfig()
 UPLOAD_DIR = cfg.uploads_dir
+FORM_UPLOAD_DIR = UPLOAD_DIR / "forms"
 OUTPUT_DIR = cfg.outputs_dir
-FIELD_MAP_DEFAULT = cfg.default_field_map
-TEMPLATE_PDF = cfg.project_root / "templates" / "Home_Loan_Booklet.pdf"
+SUPPORTED_FORM_SUFFIXES = {".pdf"}
 OUTPUT_FILES = [
     "extracted_raw.json",
     "loan_form_output.json",
     "loan_form_output.xlsx",
+    "ocr_full_text.txt",
 ]
 DOWNLOADABLE_OUTPUTS = set(OUTPUT_FILES + ["loan_form_output_filled.pdf"])
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+FORM_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def build_parser(field_map_path: Path) -> LoanFormParser:
-    mapper = TemplateMapper(field_map_path)
-    ocr = HybridOCREngine(
+def build_ocr_engine() -> HybridOCREngine:
+    return HybridOCREngine(
         language=cfg.ocr.language,
         use_paddle=cfg.ocr.use_paddle,
         use_easy=cfg.ocr.use_easyocr,
         use_tesseract=cfg.ocr.use_tesseract,
+        strict_paddle=cfg.ocr.strict_paddle,
+        paddle_cache_dir=cfg.paddle_cache_dir,
+        paddle_device=cfg.ocr.paddle_device,
+        paddle_enable_mkldnn=cfg.ocr.paddle_enable_mkldnn,
+        paddle_ocr_version=cfg.ocr.paddle_ocr_version,
+        paddle_use_doc_orientation_classify=cfg.ocr.paddle_use_doc_orientation_classify,
+        paddle_use_doc_unwarping=cfg.ocr.paddle_use_doc_unwarping,
+        paddle_use_textline_orientation=cfg.ocr.paddle_use_textline_orientation,
+        paddle_disable_model_source_check=cfg.ocr.paddle_disable_model_source_check,
+        paddle_doc_orientation_model_dir=cfg.ocr.paddle_doc_orientation_model_dir,
+        paddle_doc_unwarping_model_dir=cfg.ocr.paddle_doc_unwarping_model_dir,
+        paddle_text_detection_model_dir=cfg.ocr.paddle_text_detection_model_dir,
+        paddle_textline_orientation_model_dir=cfg.ocr.paddle_textline_orientation_model_dir,
+        paddle_text_recognition_model_dir=cfg.ocr.paddle_text_recognition_model_dir,
     )
-    return LoanFormParser(mapper, ocr)
 
 
 def get_latest_uploaded_input():
@@ -64,6 +71,19 @@ def get_latest_uploaded_input():
         reverse=True,
     )
     return uploads[0] if uploads else None
+
+
+def is_supported_form_file(path: Path) -> bool:
+    return Path(path).suffix.lower() in SUPPORTED_FORM_SUFFIXES
+
+
+def get_latest_uploaded_form():
+    forms = sorted(
+        [path for path in FORM_UPLOAD_DIR.iterdir() if path.is_file() and is_supported_form_file(path)],
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    return forms[0] if forms else None
 
 
 def read_json_if_exists(path: Path):
@@ -76,55 +96,114 @@ def available_output_files():
     return [name for name in OUTPUT_FILES if (OUTPUT_DIR / name).exists()]
 
 
-def build_upload_path(filename: str) -> Path:
+def available_preview_images():
+    preview_files = [path.name for path in OUTPUT_DIR.glob(f"{PREVIEW_PREFIX}*.png") if path.is_file()]
+
+    def sort_key(name: str):
+        stem = Path(name).stem
+        page_no = stem.replace(PREVIEW_PREFIX.rstrip("_"), "").split("_")[-1]
+        try:
+            return int(page_no)
+        except Exception:
+            return 0
+
+    return sorted(preview_files, key=sort_key)
+
+
+def build_upload_path(
+    filename: str,
+    *,
+    destination_dir: Path = UPLOAD_DIR,
+    allowed_suffixes=None,
+    default_stem: str = "handwritten_upload",
+) -> Path:
     safe_name = secure_filename(filename)
     if not safe_name:
         raise ValueError("Uploaded filename is invalid.")
 
+    allowed_suffixes = allowed_suffixes or SUPPORTED_INPUT_SUFFIXES
     suffix = Path(safe_name).suffix.lower()
-    if suffix not in SUPPORTED_INPUT_SUFFIXES:
-        allowed = ", ".join(sorted(SUPPORTED_INPUT_SUFFIXES))
+    if suffix not in allowed_suffixes:
+        allowed = ", ".join(sorted(allowed_suffixes))
         raise ValueError(f"Unsupported file type '{suffix}'. Allowed: {allowed}")
 
-    stem = Path(safe_name).stem or "handwritten_upload"
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    stem = Path(safe_name).stem or default_stem
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    candidate = UPLOAD_DIR / f"{stem}_{timestamp}{suffix}"
+    candidate = destination_dir / f"{stem}_{timestamp}{suffix}"
     counter = 1
     while candidate.exists():
-        candidate = UPLOAD_DIR / f"{stem}_{timestamp}_{counter}{suffix}"
+        candidate = destination_dir / f"{stem}_{timestamp}_{counter}{suffix}"
         counter += 1
     return candidate
 
 
-def process_input_file(input_path: Path):
-    parser = build_parser(Path(FIELD_MAP_DEFAULT))
-    pil_pages = load_document_images(input_path)
-    pages_bgr = [pil_to_bgr(page) for page in pil_pages]
-    parsed = parser.parse(pages_bgr)
+def remove_filled_output():
+    filled_output = OUTPUT_DIR / "loan_form_output_filled.pdf"
+    if filled_output.exists():
+        filled_output.unlink()
+
+
+def build_full_text(parsed: dict) -> str:
+    pages = parsed.get("pages", [])
+    chunks = []
+    for page in pages:
+        page_number = page.get("page_number")
+        text = (page.get("text") or "").strip()
+        if not text:
+            continue
+        chunks.append(f"Page {page_number}\n{text}")
+    return "\n\n".join(chunks)
+
+
+def process_input_file(input_path: Path, target_form_path: Path | None = None):
+    parsed = run_form_ocr_pipeline(
+        input_path=input_path,
+        output_dir=OUTPUT_DIR,
+        ocr_engine=build_ocr_engine(),
+        target_form_path=target_form_path,
+    )
     parsed.setdefault("meta", {})
-    parsed["meta"]["source_file"] = input_path.name
-    parsed["meta"]["template_file"] = TEMPLATE_PDF.name
     parsed["meta"]["input_type"] = input_path.suffix.lower().lstrip(".")
     parsed["meta"]["parsed_at"] = datetime.now().isoformat(timespec="seconds")
+    parsed["meta"]["workflow_mode"] = "ocr_first_form_fill"
 
+    form_status = parsed["meta"].get("form_fill_status")
+    if target_form_path is not None and parsed["meta"].get("available_pdf_field_count", 0) > 0:
+        try:
+            fill_meta = save_filled_pdf(
+                parsed,
+                template_pdf_path=Path(target_form_path),
+                out_pdf_path=OUTPUT_DIR / "loan_form_output_filled.pdf",
+                mode="form",
+            )
+            parsed["meta"].update(fill_meta)
+            parsed["meta"]["form_fill_status"] = "completed"
+            parsed["meta"]["form_fill_message"] = f"Filled {Path(target_form_path).name} using OCR-extracted field values."
+        except Exception as exc:
+            remove_filled_output()
+            parsed["meta"]["form_fill_status"] = "failed"
+            parsed["meta"]["form_fill_message"] = str(exc)
+    elif form_status != "ready":
+        remove_filled_output()
+
+    full_text = build_full_text(parsed)
     save_json(parsed, OUTPUT_DIR / "extracted_raw.json")
     save_json(parsed, OUTPUT_DIR / "loan_form_output.json")
     save_excel(parsed, OUTPUT_DIR / "loan_form_output.xlsx")
-    template_pages = pdf_to_images(TEMPLATE_PDF)
-    page_image_sizes = {
-        idx + 1: (page.size[0], page.size[1])
-        for idx, page in enumerate(template_pages)
-    }
-    with Path(FIELD_MAP_DEFAULT).open("r", encoding="utf-8") as handle:
-        field_map_data = json.load(handle)
-    save_filled_pdf(
-        parsed,
-        template_pdf_path=TEMPLATE_PDF,
-        out_pdf_path=OUTPUT_DIR / "loan_form_output_filled.pdf",
-        field_map=field_map_data,
-        page_image_sizes=page_image_sizes,
-    )
+    save_text(full_text, OUTPUT_DIR / "ocr_full_text.txt")
     return parsed
+
+
+def build_flash_message(parsed: dict, input_name: str) -> tuple[str, str]:
+    status = parsed.get("meta", {}).get("form_fill_status")
+    message = parsed.get("meta", {}).get("form_fill_message", "")
+    if status == "completed":
+        target_name = parsed.get("meta", {}).get("target_form_file", "the provided form")
+        return "success", f"Processed {input_name}, extracted the handwriting, and filled {target_name}."
+    if status == "failed":
+        return "error", f"Processed {input_name}, but form filling failed: {message}"
+    return "success", f"Processed {input_name}. OCR results are ready. {message}"
 
 
 @app.get("/")
@@ -132,17 +211,20 @@ def index():
     parsed = read_json_if_exists(OUTPUT_DIR / "loan_form_output.json")
     filled_pdf = OUTPUT_DIR / "loan_form_output_filled.pdf"
     uploaded_input = get_latest_uploaded_input()
+    uploaded_form = get_latest_uploaded_form()
     return render_template(
         "index.html",
         parsed=parsed,
         uploaded_file_exists=uploaded_input is not None,
         uploaded_file_path=str(uploaded_input) if uploaded_input else "",
         uploaded_file_name=uploaded_input.name if uploaded_input else "",
+        provided_form_exists=uploaded_form is not None,
+        provided_form_path=str(uploaded_form) if uploaded_form else "",
+        provided_form_name=uploaded_form.name if uploaded_form else "",
         accepted_formats=", ".join(sorted(SUPPORTED_INPUT_SUFFIXES)),
-        template_pdf_exists=TEMPLATE_PDF.exists(),
-        template_pdf_path=str(TEMPLATE_PDF),
         filled_pdf_exists=filled_pdf.exists(),
         filled_pdf_name=filled_pdf.name,
+        preview_images=available_preview_images(),
         outputs=available_output_files(),
     )
 
@@ -150,25 +232,31 @@ def index():
 @app.post("/upload")
 def upload_file():
     uploaded_file = request.files.get("handwritten_file")
+    target_form = request.files.get("target_form")
+    existing_form = get_latest_uploaded_form()
 
     if uploaded_file is None or not uploaded_file.filename:
         flash("Choose a handwritten PDF or image file to upload.", "error")
         return redirect(url_for("index"))
 
-    if not TEMPLATE_PDF.exists():
-        flash(f"Template PDF not found: {TEMPLATE_PDF}", "error")
-        return redirect(url_for("index"))
-
     try:
         upload_path = build_upload_path(uploaded_file.filename)
+        target_form_path = existing_form
+        if target_form is not None and target_form.filename:
+            target_form_path = build_upload_path(
+                target_form.filename,
+                destination_dir=FORM_UPLOAD_DIR,
+                allowed_suffixes=SUPPORTED_FORM_SUFFIXES,
+                default_stem="provided_form",
+            )
+            target_form.save(str(target_form_path))
+
         uploaded_file.save(str(upload_path))
-        process_input_file(upload_path)
-        flash(
-            f"Uploaded {upload_path.name}, parsed it, and filled {TEMPLATE_PDF.name}.",
-            "success",
-        )
+        parsed = process_input_file(upload_path, target_form_path=target_form_path)
+        category, message = build_flash_message(parsed, upload_path.name)
+        flash(message, category)
     except Exception as exc:
-        flash(f"Upload failed: {exc}", "error")
+        flash(f"Processing failed: {exc}", "error")
 
     return redirect(url_for("index"))
 
@@ -176,10 +264,7 @@ def upload_file():
 @app.post("/parse")
 def parse_pdf():
     input_file = get_latest_uploaded_input()
-
-    if not TEMPLATE_PDF.exists():
-        flash(f"Template PDF not found: {TEMPLATE_PDF}", "error")
-        return redirect(url_for("index"))
+    target_template = get_latest_uploaded_form()
 
     if input_file is None:
         flash(
@@ -189,13 +274,11 @@ def parse_pdf():
         return redirect(url_for("index"))
 
     try:
-        process_input_file(input_file)
-        flash(
-            f"Reprocessed {input_file.name} and regenerated the filled PDF.",
-            "success",
-        )
+        parsed = process_input_file(input_file, target_form_path=target_template)
+        category, message = build_flash_message(parsed, input_file.name)
+        flash(message, category)
     except Exception as exc:
-        flash(f"Parse failed: {exc}", "error")
+        flash(f"Processing failed: {exc}", "error")
 
     return redirect(url_for("index"))
 
@@ -224,12 +307,33 @@ def uploaded_file(filename):
     return send_from_directory(UPLOAD_DIR, filename, as_attachment=False)
 
 
+@app.get("/provided-form/<path:filename>")
+def provided_form(filename):
+    file_path = FORM_UPLOAD_DIR / filename
+    if not file_path.exists() or not is_supported_form_file(file_path):
+        flash("Provided form not found.", "error")
+        return redirect(url_for("index"))
+
+    return send_from_directory(FORM_UPLOAD_DIR, filename, as_attachment=False)
+
+
+@app.get("/artifact/<path:filename>")
+def artifact(filename):
+    if not filename.startswith(PREVIEW_PREFIX) or not filename.endswith(".png"):
+        flash("Invalid preview artifact request.", "error")
+        return redirect(url_for("index"))
+
+    file_path = OUTPUT_DIR / filename
+    if not file_path.exists():
+        flash(f"Artifact not found: {filename}", "error")
+        return redirect(url_for("index"))
+
+    return send_from_directory(OUTPUT_DIR, filename, as_attachment=False)
+
+
 @app.get("/preview/<path:filename>")
 def preview(filename):
-    allowed = {
-        "loan_form_output_filled.pdf",
-    }
-    if filename not in allowed:
+    if filename != "loan_form_output_filled.pdf":
         flash("Invalid preview request.", "error")
         return redirect(url_for("index"))
 

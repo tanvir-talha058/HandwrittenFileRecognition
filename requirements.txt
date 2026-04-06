@@ -5,7 +5,9 @@ pandas>=2.2.0
 openpyxl>=3.1.2
 pillow>=10.3.0
 pytesseract>=0.3.10
-paddleocr>=2.8.1
+# Use `paddlepaddle-gpu` instead of `paddlepaddle` if you want GPU inference.
+paddlepaddle==3.3.1
+paddleocr==3.0.2
 easyocr>=1.7.1
 Flask>=3.0.3
 pypdf>=4.2.0

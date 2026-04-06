@@ -1,47 +1,37 @@
 import argparse
-import json
 from pathlib import Path
 
 from config import AppConfig
-from modules.document_loader import load_document_images
-from modules.formatter import save_excel, save_filled_pdf, save_json
+from modules.form_pipeline import run_form_ocr_pipeline
+from modules.formatter import save_excel, save_filled_pdf, save_json, save_text
 from modules.ocr_engine import HybridOCREngine
-from modules.parser import LoanFormParser
-from modules.pdf_processor import pdf_to_images
-from modules.preprocess import pil_to_bgr
-from modules.template_mapper import TemplateMapper
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Handwritten Loan Form Digitization")
+    parser = argparse.ArgumentParser(description="Handwritten form OCR and PDF filling")
     parser.add_argument(
         "--input-file",
-        "--input-pdf",
-        dest="input_file",
         required=True,
-        help="Path to the handwritten input PDF or image",
+        help="Path to the handwritten source PDF or image",
     )
-    parser.add_argument("--field-map", default=None, help="Path to field map JSON")
+    parser.add_argument(
+        "--target-form",
+        default=None,
+        help="Optional fillable PDF form to align against and fill",
+    )
     parser.add_argument("--output-dir", default=None, help="Output directory")
-    parser.add_argument(
-        "--template-pdf",
-        default=None,
-        help="Path to the blank template PDF used for the filled output",
-    )
-    parser.add_argument(
-        "--review-json",
-        default=None,
-        help="Optional corrected JSON to merge after manual validation",
-    )
     return parser.parse_args()
 
 
-def deep_merge(base: dict, override: dict):
-    for key, value in override.items():
-        if isinstance(value, dict) and isinstance(base.get(key), dict):
-            deep_merge(base[key], value)
-        else:
-            base[key] = value
+def build_full_text(parsed: dict) -> str:
+    chunks = []
+    for page in parsed.get("pages", []):
+        page_number = page.get("page_number")
+        text = (page.get("text") or "").strip()
+        if not text:
+            continue
+        chunks.append(f"Page {page_number}\n{text}")
+    return "\n\n".join(chunks)
 
 
 def main():
@@ -49,71 +39,79 @@ def main():
     cfg = AppConfig()
 
     input_file = Path(args.input_file).expanduser().resolve()
-    field_map = (
-        Path(args.field_map).expanduser().resolve()
-        if args.field_map
-        else cfg.default_field_map
-    )
     output_dir = (
         Path(args.output_dir).expanduser().resolve()
         if args.output_dir
         else cfg.outputs_dir
     )
-    template_pdf = (
-        Path(args.template_pdf).expanduser().resolve()
-        if args.template_pdf
-        else cfg.project_root / "templates" / "Home_Loan_Booklet.pdf"
+    target_form = (
+        Path(args.target_form).expanduser().resolve()
+        if args.target_form
+        else None
     )
 
-    mapper = TemplateMapper(field_map)
     ocr = HybridOCREngine(
         language=cfg.ocr.language,
         use_paddle=cfg.ocr.use_paddle,
         use_easy=cfg.ocr.use_easyocr,
         use_tesseract=cfg.ocr.use_tesseract,
+        strict_paddle=cfg.ocr.strict_paddle,
+        paddle_cache_dir=cfg.paddle_cache_dir,
+        paddle_device=cfg.ocr.paddle_device,
+        paddle_enable_mkldnn=cfg.ocr.paddle_enable_mkldnn,
+        paddle_ocr_version=cfg.ocr.paddle_ocr_version,
+        paddle_use_doc_orientation_classify=cfg.ocr.paddle_use_doc_orientation_classify,
+        paddle_use_doc_unwarping=cfg.ocr.paddle_use_doc_unwarping,
+        paddle_use_textline_orientation=cfg.ocr.paddle_use_textline_orientation,
+        paddle_disable_model_source_check=cfg.ocr.paddle_disable_model_source_check,
+        paddle_doc_orientation_model_dir=cfg.ocr.paddle_doc_orientation_model_dir,
+        paddle_doc_unwarping_model_dir=cfg.ocr.paddle_doc_unwarping_model_dir,
+        paddle_text_detection_model_dir=cfg.ocr.paddle_text_detection_model_dir,
+        paddle_textline_orientation_model_dir=cfg.ocr.paddle_textline_orientation_model_dir,
+        paddle_text_recognition_model_dir=cfg.ocr.paddle_text_recognition_model_dir,
     )
 
-    pil_pages = load_document_images(input_file)
-    pages_bgr = [pil_to_bgr(page) for page in pil_pages]
+    parsed = run_form_ocr_pipeline(
+        input_path=input_file,
+        output_dir=output_dir,
+        ocr_engine=ocr,
+        target_form_path=target_form,
+    )
+    parsed.setdefault("meta", {})
+    parsed["meta"]["input_type"] = input_file.suffix.lower().lstrip(".")
 
-    parser = LoanFormParser(mapper, ocr)
-    parsed = parser.parse(pages_bgr)
-
-    if args.review_json:
-        review_path = Path(args.review_json).expanduser().resolve()
-        if review_path.exists():
-            corrected = json.loads(review_path.read_text(encoding="utf-8"))
-            deep_merge(parsed, corrected)
+    if target_form is not None and parsed["meta"].get("available_pdf_field_count", 0) > 0:
+        try:
+            fill_meta = save_filled_pdf(
+                parsed,
+                template_pdf_path=target_form,
+                out_pdf_path=output_dir / "loan_form_output_filled.pdf",
+                mode="form",
+            )
+            parsed["meta"].update(fill_meta)
+            parsed["meta"]["form_fill_status"] = "completed"
+        except Exception as exc:
+            parsed["meta"]["form_fill_status"] = "failed"
+            parsed["meta"]["form_fill_message"] = str(exc)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_json_path = output_dir / "extracted_raw.json"
     final_json_path = output_dir / "loan_form_output.json"
     excel_path = output_dir / "loan_form_output.xlsx"
-    filled_pdf_path = output_dir / "loan_form_output_filled.pdf"
+    text_path = output_dir / "ocr_full_text.txt"
 
     save_json(parsed, raw_json_path)
     save_json(parsed, final_json_path)
     save_excel(parsed, excel_path)
-    template_pages = pdf_to_images(template_pdf)
-    page_image_sizes = {
-        idx + 1: (page.size[0], page.size[1])
-        for idx, page in enumerate(template_pages)
-    }
-    with field_map.open("r", encoding="utf-8") as handle:
-        field_map_data = json.load(handle)
-    save_filled_pdf(
-        parsed,
-        template_pdf_path=template_pdf,
-        out_pdf_path=filled_pdf_path,
-        field_map=field_map_data,
-        page_image_sizes=page_image_sizes,
-    )
+    save_text(build_full_text(parsed), text_path)
 
     print("Processing complete")
     print(f"- Raw JSON: {raw_json_path}")
     print(f"- Final JSON: {final_json_path}")
     print(f"- Excel: {excel_path}")
-    print(f"- Filled PDF: {filled_pdf_path}")
+    print(f"- OCR text: {text_path}")
+    if target_form is not None:
+        print(f"- Filled PDF: {output_dir / 'loan_form_output_filled.pdf'}")
 
 
 if __name__ == "__main__":

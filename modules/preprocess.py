@@ -17,15 +17,23 @@ def pil_to_bgr(image):
     return arr[:, :, ::-1]
 
 
-def preprocess_roi(roi: np.ndarray, denoise: bool = True) -> np.ndarray:
-    """Basic ROI preprocessing for OCR and binary analysis."""
+def preprocess_roi(roi: np.ndarray, denoise: bool = True, binarize: bool = False) -> np.ndarray:
+    """Preprocess an ROI for OCR or binary analysis.
+
+    OCR usually works better on a lightly denoised grayscale crop than on a hard
+    thresholded crop, so grayscale is the default. Call with ``binarize=True`` when a
+    binary mask is explicitly needed.
+    """
     if cv2 is None:
         return roi
 
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY) if roi.ndim == 3 else roi
 
     if denoise:
-        gray = cv2.GaussianBlur(gray, (3, 3), 0)
+        gray = cv2.bilateralFilter(gray, 5, 50, 50)
+
+    if not binarize:
+        return gray
 
     # OTSU threshold helps both text visibility and checkbox density logic.
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)

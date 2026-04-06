@@ -3,14 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Loan Form Parser</title>
+  <title>Handwritten Form OCR Workspace</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <main class="page">
     <header class="hero">
-      <h1>Loan Form PDF Formatter</h1>
-      <p>Upload a handwritten loan form, parse the mapped fields, and fill the provided PDF template automatically.</p>
+      <div class="hero-copy">
+        <span class="eyebrow">OCR workspace</span>
+        <h1>Scan handwriting like an OCR demo. Then fill your form automatically.</h1>
+        <p>Upload a handwritten document, inspect the OCR detections page by page, and if you provide a fillable PDF form the app will align the pages, extract the field values, and generate a filled result.</p>
+      </div>
+      <div class="hero-metrics">
+        <article class="metric-card">
+          <span class="metric-label">Latest handwritten file</span>
+          <strong class="metric-value">{{ uploaded_file_name or 'Waiting for upload' }}</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Target form</span>
+          <strong class="metric-value">{{ provided_form_name or 'OCR-only mode' }}</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Fill status</span>
+          <strong class="metric-value">{{ parsed.get('meta', {}).get('form_fill_status', 'idle') if parsed else 'idle' }}</strong>
+        </article>
+      </div>
     </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -23,95 +40,239 @@
       {% endif %}
     {% endwith %}
 
-    <section class="card">
-      <h2>1) Upload Handwritten File</h2>
-      <p>Choose your handwritten file and the app will parse it and fill <strong>{{ template_pdf_path }}</strong>.</p>
-      <p><strong>Accepted formats:</strong> {{ accepted_formats }}</p>
-      {% if template_pdf_exists %}
-        <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" class="form-grid">
-          <label>
-            Handwritten file
-            <input
-              type="file"
-              name="handwritten_file"
-              accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp"
-              required
-            >
-          </label>
-          <div class="actions">
-            <button type="submit">Upload, Parse, and Fill PDF</button>
-            {% if uploaded_file_exists %}
-              <a href="{{ url_for('uploaded_file', filename=uploaded_file_name) }}" class="download-link">Open Latest Upload</a>
+    <section class="layout-shell">
+      <div class="primary-column">
+        <section class="card upload-card">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Input</span>
+              <h2>Upload source and target</h2>
+            </div>
+            <span class="section-badge">{{ accepted_formats }}</span>
+          </div>
+
+          <p class="section-copy">This app now treats the handwritten file as the OCR source. Add a fillable PDF form if you want the extracted text written back into a real form after parsing.</p>
+
+          <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" class="form-grid">
+            <label class="upload-field">
+              <span>Handwritten file</span>
+              <input
+                type="file"
+                name="handwritten_file"
+                accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp"
+                required
+              >
+            </label>
+
+            <label class="upload-field">
+              <span>Fillable PDF form</span>
+              <input
+                type="file"
+                name="target_form"
+                accept=".pdf,application/pdf"
+              >
+            </label>
+
+            <p class="hint">
+              For automatic form filling, provide a <code>fillable PDF</code>. The app reads the PDF field rectangles directly, aligns the handwritten pages to that form, OCRs each field region, and fills the output PDF.
+            </p>
+
+            <div class="actions">
+              <button type="submit">Run OCR and fill form</button>
+              {% if uploaded_file_exists %}
+                <a href="{{ url_for('uploaded_file', filename=uploaded_file_name) }}" class="download-link subtle-link">Open handwritten source</a>
+              {% endif %}
+              {% if provided_form_exists %}
+                <a href="{{ url_for('provided_form', filename=provided_form_name) }}" class="download-link subtle-link">Open target form</a>
+              {% endif %}
+            </div>
+          </form>
+
+          {% if uploaded_file_exists %}
+            <form method="post" action="{{ url_for('parse_pdf') }}" class="inline-form">
+              <button type="submit" class="secondary-btn">Re-run latest OCR job</button>
+            </form>
+          {% endif %}
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Output</span>
+              <h2>Filled form preview</h2>
+            </div>
+            {% if filled_pdf_exists %}
+              <a href="{{ url_for('download', filename=filled_pdf_name) }}" class="download-link">Download filled PDF</a>
             {% endif %}
           </div>
-        </form>
-      {% else %}
-        <p class="danger">Template file is missing at the path above.</p>
-      {% endif %}
 
-      <p><strong>Latest uploaded file:</strong> {{ uploaded_file_path or 'No uploaded file yet' }}</p>
-      {% if uploaded_file_exists %}
-        <form method="post" action="{{ url_for('parse_pdf') }}">
-          <button type="submit">Reprocess Latest Upload</button>
-        </form>
-      {% endif %}
-    </section>
+          {% if filled_pdf_exists %}
+            <div class="pdf-wrap">
+              <iframe src="{{ url_for('preview', filename=filled_pdf_name) }}" title="Filled PDF preview"></iframe>
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <h3>No filled form yet</h3>
+              <p>OCR can still run without a form, but to generate a filled PDF you need to provide a fillable target form.</p>
+            </div>
+          {% endif %}
+        </section>
+      </div>
 
-    <section class="card">
-      <h2>2) Parsed Data</h2>
-      {% if parsed %}
-        <h3>Fields</h3>
-        <div class="grid two-col">
-          {% for k, v in parsed.get('fields', {}).items() %}
-            <div class="kv"><span>{{ k }}</span><strong>{{ '' if v is none else v }}</strong></div>
-          {% endfor %}
-        </div>
-
-        <h3>Tables</h3>
-        {% for table_name, table_data in parsed.get('tables', {}).items() %}
-          <h4>{{ table_name }}</h4>
-          <div class="grid two-col">
-            {% for k, v in table_data.items() %}
-              <div class="kv"><span>{{ k }}</span><strong>{{ '' if v is none else v }}</strong></div>
-            {% endfor %}
+      <aside class="side-column">
+        <section class="card status-card">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Pipeline</span>
+              <h2>Current status</h2>
+            </div>
           </div>
-        {% endfor %}
 
-        <h3>Meta</h3>
-        <div class="grid two-col">
-          {% for k, v in parsed.get('meta', {}).items() %}
-            <div class="kv"><span>{{ k }}</span><strong>{{ '' if v is none else v }}</strong></div>
+          <div class="status-list">
+            <div class="status-item">
+              <span>Source file</span>
+              <strong>{{ uploaded_file_name or 'No file yet' }}</strong>
+            </div>
+            <div class="status-item">
+              <span>Target form</span>
+              <strong>{{ provided_form_name or 'Not attached' }}</strong>
+            </div>
+            <div class="status-item">
+              <span>OCR pages</span>
+              <strong>{{ parsed.get('meta', {}).get('page_count', 0) if parsed else 0 }}</strong>
+            </div>
+            <div class="status-item">
+              <span>Form fill state</span>
+              <strong>{{ parsed.get('meta', {}).get('form_fill_status', 'idle') if parsed else 'idle' }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Details</span>
+              <h2>Job info</h2>
+            </div>
+          </div>
+
+          <div class="path-list">
+            <div class="path-item">
+              <span>Latest handwritten file</span>
+              <code>{{ uploaded_file_path or 'No handwritten file yet' }}</code>
+            </div>
+            <div class="path-item">
+              <span>Latest target form</span>
+              <code>{{ provided_form_path or 'OCR-only mode until you upload a fillable PDF' }}</code>
+            </div>
+            {% if parsed %}
+              <div class="path-item">
+                <span>Form fill message</span>
+                <code>{{ parsed.get('meta', {}).get('form_fill_message', 'No message available') }}</code>
+              </div>
+            {% endif %}
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Artifacts</span>
+              <h2>Downloads</h2>
+            </div>
+          </div>
+
+          {% if outputs %}
+            <div class="downloads stack">
+              {% for file in outputs %}
+                <a href="{{ url_for('download', filename=file) }}" class="download-link subtle-link">Download {{ file }}</a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="muted-copy">No output files generated yet.</p>
+          {% endif %}
+        </section>
+      </aside>
+    </section>
+
+    <section class="card data-card">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">OCR visualization</span>
+          <h2>Detected text preview</h2>
+        </div>
+      </div>
+
+      {% if preview_images %}
+        <div class="preview-gallery">
+          {% for image in preview_images %}
+            <article class="preview-card">
+              <div class="preview-label">Page {{ loop.index }}</div>
+              <img src="{{ url_for('artifact', filename=image) }}" alt="OCR preview page {{ loop.index }}">
+            </article>
           {% endfor %}
         </div>
       {% else %}
-        <p>No parsed data yet. Upload a handwritten file to generate the filled PDF.</p>
+        <div class="empty-state compact">
+          <h3>No OCR previews yet</h3>
+          <p>Run an OCR job and the page-level detection previews will appear here.</p>
+        </div>
       {% endif %}
     </section>
 
-    <section class="card">
-      <h2>3) Filled PDF Preview</h2>
-      {% if filled_pdf_exists %}
-        <div class="pdf-wrap">
-          <iframe src="{{ url_for('preview', filename=filled_pdf_name) }}" title="Filled PDF preview"></iframe>
+    <section class="card data-card">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Form extraction</span>
+          <h2>Field results</h2>
         </div>
-        <div class="downloads">
-          <a href="{{ url_for('download', filename=filled_pdf_name) }}" class="download-link">Download Filled PDF</a>
+      </div>
+
+      {% if parsed and parsed.get('field_matches') %}
+        <div class="field-grid">
+          {% for item in parsed.get('field_matches', []) %}
+            <article class="field-card">
+              <span>{{ item.get('name') }}</span>
+              <strong>{{ item.get('value') or 'No value detected' }}</strong>
+              <p>Page {{ item.get('page_number') }} • {{ item.get('status') }}{% if item.get('confidence') is not none %} • {{ '%.2f'|format(item.get('confidence', 0.0)) }}{% endif %}</p>
+            </article>
+          {% endfor %}
+        </div>
+      {% elif parsed %}
+        <div class="empty-state compact">
+          <h3>No form field extraction yet</h3>
+          <p>Upload a fillable PDF form to let the app align pages and OCR the actual form field regions.</p>
         </div>
       {% else %}
-        <p>Filled PDF not generated yet.</p>
+        <div class="empty-state compact">
+          <h3>No OCR job yet</h3>
+          <p>Upload a handwritten document to start extracting field values.</p>
+        </div>
       {% endif %}
     </section>
 
-    <section class="card">
-      <h2>4) Other Downloads</h2>
-      {% if outputs %}
-        <div class="downloads">
-          {% for file in outputs %}
-            <a href="{{ url_for('download', filename=file) }}" class="download-link">Download {{ file }}</a>
+    <section class="card data-card">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Raw OCR</span>
+          <h2>Per-page text</h2>
+        </div>
+      </div>
+
+      {% if parsed and parsed.get('pages') %}
+        <div class="text-panels">
+          {% for page in parsed.get('pages', []) %}
+            <article class="text-panel">
+              <h3>Page {{ page.get('page_number') }}</h3>
+              <pre>{{ page.get('text') or 'No text detected on this page.' }}</pre>
+            </article>
           {% endfor %}
         </div>
       {% else %}
-        <p>No output files have been generated yet.</p>
+        <div class="empty-state compact">
+          <h3>No page text yet</h3>
+          <p>Run OCR to inspect the recognized text page by page.</p>
+        </div>
       {% endif %}
     </section>
   </main>
