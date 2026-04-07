@@ -1,10 +1,53 @@
 import os
+import sys
+import types
 from pathlib import Path
 from typing import Dict, List, Optional
 
 import numpy as np
 
 from .preprocess import preprocess_roi
+
+
+def _ensure_langchain_docstore_compat() -> None:
+    """Provide a minimal langchain.docstore alias for paddlex on langchain 1.x."""
+    if (
+        "langchain.docstore.document" in sys.modules
+        and "langchain.text_splitter" in sys.modules
+    ):
+        return
+
+    try:
+        from langchain_core.documents import Document
+    except Exception:
+        return
+
+    docstore_module = sys.modules.get("langchain.docstore")
+    if docstore_module is None:
+        docstore_module = types.ModuleType("langchain.docstore")
+        sys.modules["langchain.docstore"] = docstore_module
+
+    if "langchain.docstore.document" not in sys.modules:
+        document_module = types.ModuleType("langchain.docstore.document")
+        document_module.Document = Document
+        sys.modules["langchain.docstore.document"] = document_module
+        docstore_module.document = document_module
+
+    if "langchain.text_splitter" not in sys.modules:
+        try:
+            from langchain_text_splitters import (
+                CharacterTextSplitter,
+                RecursiveCharacterTextSplitter,
+            )
+
+            text_splitter_module = types.ModuleType("langchain.text_splitter")
+            text_splitter_module.CharacterTextSplitter = CharacterTextSplitter
+            text_splitter_module.RecursiveCharacterTextSplitter = (
+                RecursiveCharacterTextSplitter
+            )
+            sys.modules["langchain.text_splitter"] = text_splitter_module
+        except Exception:
+            pass
 
 
 class HybridOCREngine:
@@ -66,6 +109,8 @@ class HybridOCREngine:
                 local_font_path = self._default_paddle_font_path()
                 if local_font_path:
                     os.environ.setdefault("PADDLE_PDX_LOCAL_FONT_FILE_PATH", local_font_path)
+
+                _ensure_langchain_docstore_compat()
 
                 from paddleocr import PaddleOCR
 

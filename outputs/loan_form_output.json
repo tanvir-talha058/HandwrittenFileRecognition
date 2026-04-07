@@ -4,7 +4,3984 @@
     "dob": "",
     "mobile": "",
     "gender": "female",
-    "business_name": ""
+    "business_name": "Nome of Compony:"
+  },
+  "field_matches": [
+    {
+      "name": "full_name",
+      "page_number": 1,
+      "value": "",
+      "confidence": null,
+      "field_type": "mapped_text",
+      "status": "empty"
+    },
+    {
+      "name": "dob",
+      "page_number": 1,
+      "value": "",
+      "confidence": null,
+      "field_type": "mapped_text",
+      "status": "empty"
+    },
+    {
+      "name": "mobile",
+      "page_number": 1,
+      "value": "",
+      "confidence": null,
+      "field_type": "mapped_text",
+      "status": "empty"
+    },
+    {
+      "name": "gender",
+      "page_number": 1,
+      "value": "female",
+      "confidence": null,
+      "field_type": "mapped_text",
+      "status": "mapped_extracted"
+    },
+    {
+      "name": "business_name",
+      "page_number": 2,
+      "value": "Nome of Compony:",
+      "confidence": null,
+      "field_type": "mapped_text",
+      "status": "mapped_extracted"
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "size": [
+        922,
+        1300
+      ],
+      "text": "Date\n65/62125\nManager\nUnted Commercial Bark PLC\nBorushal\nBranch\nCustomer Segment\nSalaried\nBusinessman\nSel-Emolyed Prolessionals\nDoctors\nLand Lord\nNaB\nLoan Ilolmation\nPurpose of Loan\nFla Purchese\nConstnuction\nOld Home/APT Purchose\nToke Over\nAerovdlon\nOhers\nLoon Amouni BDT\n40\nBDT (In Woros)\nTerm\"\n5\nYeors\nGrece Perod\nVocths\nPrincipal Applicant Dctaits\nPersonal Details\nFull Nome:\nMD.\nMahed]\nHasan\nProfession\nBUSINEsS\nGonoor\nMot\nFurolo\nDote of Birth [A\n992\nEacton\nNon Crduato\nGiuduoto\nPost Graduolu\nMorlol Stolus\"\nMorrieo\nSinglc\nNer & Drpend(\nTIN\n515884740 507\nPasSparNIDI Dirglearko\n'161 590 5392\nFother's Nome:_Ma:\nShamsul\nHaqul:\nMother's Nome Mas .\nNasim\nHaqw\nSpouse Name (I moriedl:\nUnmay\nHabiba\nSpouse Fother s Name'\nAbu\nkalam\nAzad\nSpouse Mother $ Name\nFeroza\nDequm\nSpouse Profession\"\nHouse\ncufe\nContact Details\nResidence Status\nOwn\nFomly Owneo\nRentea\nGov\nOther\nPresent Adaess:\nNasima _Villa,tlouse_No\nIg27 /0d0,\nLalan\nDahit Pan . Rupchl, Baxbal-cw\nNo; of Yeers & Present Adess'\nMonths\nPermonent Address\"\nMusbnpta\nBaqunA Sadan\nBarguna\nTelephone No\nMoble No'\n0l7i7649301\nSpouse Wok Address (f wokingt_\nSpouse Telephone No'\nMoble No'\n03 0f 12\n'Y+ti\nLu)\nYeas\nPaze",
+      "preview_file": "ocr_preview_page_1.png",
+      "detections": [
+        {
+          "text": "Date",
+          "confidence": 0.9981816411018372,
+          "bbox": [
+            [
+              47,
+              115
+            ],
+            [
+              77,
+              115
+            ],
+            [
+              77,
+              131
+            ],
+            [
+              47,
+              131
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "65/62125",
+          "confidence": 0.3047833511385976,
+          "bbox": [
+            [
+              91,
+              101
+            ],
+            [
+              213,
+              101
+            ],
+            [
+              213,
+              139
+            ],
+            [
+              91,
+              139
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Manager",
+          "confidence": 0.9647018871018245,
+          "bbox": [
+            [
+              46,
+              176
+            ],
+            [
+              101,
+              176
+            ],
+            [
+              101,
+              195
+            ],
+            [
+              46,
+              195
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Unted Commercial Bark PLC",
+          "confidence": 0.7521362266407332,
+          "bbox": [
+            [
+              47,
+              197
+            ],
+            [
+              225,
+              197
+            ],
+            [
+              225,
+              218
+            ],
+            [
+              47,
+              218
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Borushal",
+          "confidence": 0.38646325048707875,
+          "bbox": [
+            [
+              62,
+              212
+            ],
+            [
+              158,
+              212
+            ],
+            [
+              158,
+              244
+            ],
+            [
+              62,
+              244
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Branch",
+          "confidence": 0.9774545517915539,
+          "bbox": [
+            [
+              193,
+              223
+            ],
+            [
+              239,
+              223
+            ],
+            [
+              239,
+              239
+            ],
+            [
+              193,
+              239
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Customer Segment",
+          "confidence": 0.7112857317190592,
+          "bbox": [
+            [
+              49,
+              303
+            ],
+            [
+              163,
+              303
+            ],
+            [
+              163,
+              321
+            ],
+            [
+              49,
+              321
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Salaried",
+          "confidence": 0.9744184432613673,
+          "bbox": [
+            [
+              123,
+              339
+            ],
+            [
+              179,
+              339
+            ],
+            [
+              179,
+              355
+            ],
+            [
+              123,
+              355
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Businessman",
+          "confidence": 0.9999675072228086,
+          "bbox": [
+            [
+              249,
+              339
+            ],
+            [
+              339,
+              339
+            ],
+            [
+              339,
+              355
+            ],
+            [
+              249,
+              355
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Sel-Emolyed Prolessionals",
+          "confidence": 0.6689311825911374,
+          "bbox": [
+            [
+              349,
+              337
+            ],
+            [
+              529,
+              337
+            ],
+            [
+              529,
+              357
+            ],
+            [
+              349,
+              357
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Doctors",
+          "confidence": 0.9455278661427863,
+          "bbox": [
+            [
+              535,
+              337
+            ],
+            [
+              589,
+              337
+            ],
+            [
+              589,
+              353
+            ],
+            [
+              535,
+              353
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Land Lord",
+          "confidence": 0.622361965453892,
+          "bbox": [
+            [
+              599,
+              335
+            ],
+            [
+              671,
+              335
+            ],
+            [
+              671,
+              351
+            ],
+            [
+              599,
+              351
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "NaB",
+          "confidence": 0.49217983685392175,
+          "bbox": [
+            [
+              731,
+              331
+            ],
+            [
+              765,
+              331
+            ],
+            [
+              765,
+              349
+            ],
+            [
+              731,
+              349
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Loan Ilolmation",
+          "confidence": 0.4592840636676485,
+          "bbox": [
+            [
+              53,
+              403
+            ],
+            [
+              159,
+              403
+            ],
+            [
+              159,
+              419
+            ],
+            [
+              53,
+              419
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Purpose of Loan",
+          "confidence": 0.6736252893168987,
+          "bbox": [
+            [
+              64,
+              422
+            ],
+            [
+              173,
+              422
+            ],
+            [
+              173,
+              440
+            ],
+            [
+              64,
+              440
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Fla Purchese",
+          "confidence": 0.3455155253380772,
+          "bbox": [
+            [
+              365,
+              423
+            ],
+            [
+              451,
+              423
+            ],
+            [
+              451,
+              441
+            ],
+            [
+              365,
+              441
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Constnuction",
+          "confidence": 0.2629575250035059,
+          "bbox": [
+            [
+              531,
+              423
+            ],
+            [
+              611,
+              423
+            ],
+            [
+              611,
+              439
+            ],
+            [
+              531,
+              439
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Old Home/APT Purchose",
+          "confidence": 0.6502691559868062,
+          "bbox": [
+            [
+              647,
+              417
+            ],
+            [
+              809,
+              417
+            ],
+            [
+              809,
+              438
+            ],
+            [
+              647,
+              438
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Toke Over",
+          "confidence": 0.9681570273336502,
+          "bbox": [
+            [
+              365,
+              448
+            ],
+            [
+              431,
+              448
+            ],
+            [
+              431,
+              468
+            ],
+            [
+              365,
+              468
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Aerovdlon",
+          "confidence": 0.3062901298339121,
+          "bbox": [
+            [
+              531,
+              447
+            ],
+            [
+              603,
+              447
+            ],
+            [
+              603,
+              465
+            ],
+            [
+              531,
+              465
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Ohers",
+          "confidence": 0.6631144586661307,
+          "bbox": [
+            [
+              651,
+              447
+            ],
+            [
+              693,
+              447
+            ],
+            [
+              693,
+              463
+            ],
+            [
+              651,
+              463
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Loon Amouni BDT",
+          "confidence": 0.6667688311337354,
+          "bbox": [
+            [
+              67,
+              485
+            ],
+            [
+              185,
+              485
+            ],
+            [
+              185,
+              501
+            ],
+            [
+              67,
+              501
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "40",
+          "confidence": 0.9882978532795911,
+          "bbox": [
+            [
+              206,
+              474
+            ],
+            [
+              236,
+              474
+            ],
+            [
+              236,
+              498
+            ],
+            [
+              206,
+              498
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "BDT (In Woros)",
+          "confidence": 0.5058489176136912,
+          "bbox": [
+            [
+              341,
+              475
+            ],
+            [
+              437,
+              475
+            ],
+            [
+              437,
+              495
+            ],
+            [
+              341,
+              495
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Term\"",
+          "confidence": 0.6625282389570856,
+          "bbox": [
+            [
+              67,
+              505
+            ],
+            [
+              105,
+              505
+            ],
+            [
+              105,
+              521
+            ],
+            [
+              67,
+              521
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "5",
+          "confidence": 0.999642284917801,
+          "bbox": [
+            [
+              141,
+              503
+            ],
+            [
+              161,
+              503
+            ],
+            [
+              161,
+              531
+            ],
+            [
+              141,
+              531
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Yeors",
+          "confidence": 0.7782077521133578,
+          "bbox": [
+            [
+              219,
+              505
+            ],
+            [
+              257,
+              505
+            ],
+            [
+              257,
+              521
+            ],
+            [
+              219,
+              521
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Grece Perod",
+          "confidence": 0.509353903464081,
+          "bbox": [
+            [
+              343,
+              503
+            ],
+            [
+              427,
+              503
+            ],
+            [
+              427,
+              519
+            ],
+            [
+              343,
+              519
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Vocths",
+          "confidence": 0.26141610092083295,
+          "bbox": [
+            [
+              499,
+              503
+            ],
+            [
+              549,
+              503
+            ],
+            [
+              549,
+              517
+            ],
+            [
+              499,
+              517
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Principal Applicant Dctaits",
+          "confidence": 0.6321953760982281,
+          "bbox": [
+            [
+              69,
+              543
+            ],
+            [
+              234,
+              543
+            ],
+            [
+              234,
+              568
+            ],
+            [
+              69,
+              568
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Personal Details",
+          "confidence": 0.9877784440615438,
+          "bbox": [
+            [
+              55,
+              581
+            ],
+            [
+              159,
+              581
+            ],
+            [
+              159,
+              597
+            ],
+            [
+              55,
+              597
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Full Nome:",
+          "confidence": 0.913974159477702,
+          "bbox": [
+            [
+              51,
+              611
+            ],
+            [
+              119,
+              611
+            ],
+            [
+              119,
+              629
+            ],
+            [
+              51,
+              629
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "MD.",
+          "confidence": 0.30628522352818116,
+          "bbox": [
+            [
+              136,
+              606
+            ],
+            [
+              178,
+              606
+            ],
+            [
+              178,
+              630
+            ],
+            [
+              136,
+              630
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Mahed]",
+          "confidence": 0.9628552662118232,
+          "bbox": [
+            [
+              198,
+              604
+            ],
+            [
+              280,
+              604
+            ],
+            [
+              280,
+              628
+            ],
+            [
+              198,
+              628
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Hasan",
+          "confidence": 0.25346482020576216,
+          "bbox": [
+            [
+              296,
+              604
+            ],
+            [
+              366,
+              604
+            ],
+            [
+              366,
+              628
+            ],
+            [
+              296,
+              628
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Profession",
+          "confidence": 0.9845825204935633,
+          "bbox": [
+            [
+              52,
+              638
+            ],
+            [
+              123,
+              638
+            ],
+            [
+              123,
+              658
+            ],
+            [
+              52,
+              658
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "BUSINEsS",
+          "confidence": 0.38016877440024405,
+          "bbox": [
+            [
+              134,
+              630
+            ],
+            [
+              232,
+              630
+            ],
+            [
+              232,
+              654
+            ],
+            [
+              134,
+              654
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Gonoor",
+          "confidence": 0.12742348401357095,
+          "bbox": [
+            [
+              491,
+              637
+            ],
+            [
+              543,
+              637
+            ],
+            [
+              543,
+              653
+            ],
+            [
+              491,
+              653
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Mot",
+          "confidence": 0.14345371221374453,
+          "bbox": [
+            [
+              599,
+              637
+            ],
+            [
+              633,
+              637
+            ],
+            [
+              633,
+              653
+            ],
+            [
+              599,
+              653
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Furolo",
+          "confidence": 0.39137531056690417,
+          "bbox": [
+            [
+              697,
+              635
+            ],
+            [
+              747,
+              635
+            ],
+            [
+              747,
+              653
+            ],
+            [
+              697,
+              653
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Dote of Birth [A",
+          "confidence": 0.34162233897733535,
+          "bbox": [
+            [
+              52,
+              662
+            ],
+            [
+              172,
+              662
+            ],
+            [
+              172,
+              686
+            ],
+            [
+              52,
+              686
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "992",
+          "confidence": 0.9935561088091656,
+          "bbox": [
+            [
+              224,
+              660
+            ],
+            [
+              274,
+              660
+            ],
+            [
+              274,
+              686
+            ],
+            [
+              224,
+              686
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Eacton",
+          "confidence": 0.3110184660501409,
+          "bbox": [
+            [
+              393,
+              665
+            ],
+            [
+              457,
+              665
+            ],
+            [
+              457,
+              681
+            ],
+            [
+              393,
+              681
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Non Crduato",
+          "confidence": 0.1720509462689062,
+          "bbox": [
+            [
+              485,
+              665
+            ],
+            [
+              575,
+              665
+            ],
+            [
+              575,
+              681
+            ],
+            [
+              485,
+              681
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Giuduoto",
+          "confidence": 0.198916991281094,
+          "bbox": [
+            [
+              599,
+              663
+            ],
+            [
+              659,
+              663
+            ],
+            [
+              659,
+              681
+            ],
+            [
+              599,
+              681
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Post Graduolu",
+          "confidence": 0.20353487565021713,
+          "bbox": [
+            [
+              697,
+              663
+            ],
+            [
+              791,
+              663
+            ],
+            [
+              791,
+              681
+            ],
+            [
+              697,
+              681
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Morlol Stolus\"",
+          "confidence": 0.5813905641315461,
+          "bbox": [
+            [
+              53,
+              695
+            ],
+            [
+              139,
+              695
+            ],
+            [
+              139,
+              711
+            ],
+            [
+              53,
+              711
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Morrieo",
+          "confidence": 0.6662034810525747,
+          "bbox": [
+            [
+              193,
+              695
+            ],
+            [
+              241,
+              695
+            ],
+            [
+              241,
+              709
+            ],
+            [
+              193,
+              709
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Singlc",
+          "confidence": 0.3176787531776015,
+          "bbox": [
+            [
+              292,
+              692
+            ],
+            [
+              333,
+              692
+            ],
+            [
+              333,
+              712
+            ],
+            [
+              292,
+              712
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Ner & Drpend(",
+          "confidence": 0.20719499833653546,
+          "bbox": [
+            [
+              373,
+              691
+            ],
+            [
+              517,
+              691
+            ],
+            [
+              517,
+              709
+            ],
+            [
+              373,
+              709
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "TIN",
+          "confidence": 0.9988653600043891,
+          "bbox": [
+            [
+              53,
+              723
+            ],
+            [
+              79,
+              723
+            ],
+            [
+              79,
+              737
+            ],
+            [
+              53,
+              737
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "515884740 507",
+          "confidence": 0.7286689239611877,
+          "bbox": [
+            [
+              80,
+              710
+            ],
+            [
+              242,
+              710
+            ],
+            [
+              242,
+              736
+            ],
+            [
+              80,
+              736
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "PasSparNIDI Dirglearko",
+          "confidence": 0.1148710616658918,
+          "bbox": [
+            [
+              281,
+              719
+            ],
+            [
+              489,
+              719
+            ],
+            [
+              489,
+              737
+            ],
+            [
+              281,
+              737
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "'161 590 5392",
+          "confidence": 0.5606408207028096,
+          "bbox": [
+            [
+              502,
+              708
+            ],
+            [
+              656,
+              708
+            ],
+            [
+              656,
+              734
+            ],
+            [
+              502,
+              734
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Fother's Nome:_Ma:",
+          "confidence": 0.2616430779838211,
+          "bbox": [
+            [
+              50,
+              744
+            ],
+            [
+              192,
+              744
+            ],
+            [
+              192,
+              768
+            ],
+            [
+              50,
+              768
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Shamsul",
+          "confidence": 0.6286326373259272,
+          "bbox": [
+            [
+              202,
+              740
+            ],
+            [
+              304,
+              740
+            ],
+            [
+              304,
+              768
+            ],
+            [
+              202,
+              768
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Haqul:",
+          "confidence": 0.5428183761525773,
+          "bbox": [
+            [
+              322,
+              740
+            ],
+            [
+              398,
+              740
+            ],
+            [
+              398,
+              766
+            ],
+            [
+              322,
+              766
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Mother's Nome Mas .",
+          "confidence": 0.4073967696863445,
+          "bbox": [
+            [
+              50,
+              772
+            ],
+            [
+              200,
+              772
+            ],
+            [
+              200,
+              796
+            ],
+            [
+              50,
+              796
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Nasim",
+          "confidence": 0.9849715489806145,
+          "bbox": [
+            [
+              210,
+              770
+            ],
+            [
+              286,
+              770
+            ],
+            [
+              286,
+              794
+            ],
+            [
+              210,
+              794
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Haqw",
+          "confidence": 0.3313235640525818,
+          "bbox": [
+            [
+              300,
+              766
+            ],
+            [
+              376,
+              766
+            ],
+            [
+              376,
+              798
+            ],
+            [
+              300,
+              798
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Name (I moriedl:",
+          "confidence": 0.4296637478446522,
+          "bbox": [
+            [
+              51,
+              803
+            ],
+            [
+              211,
+              803
+            ],
+            [
+              211,
+              821
+            ],
+            [
+              51,
+              821
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Unmay",
+          "confidence": 0.73274522015253,
+          "bbox": [
+            [
+              219,
+              793
+            ],
+            [
+              310,
+              793
+            ],
+            [
+              310,
+              822
+            ],
+            [
+              219,
+              822
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Habiba",
+          "confidence": 0.7575018093747065,
+          "bbox": [
+            [
+              328,
+              792
+            ],
+            [
+              410,
+              792
+            ],
+            [
+              410,
+              818
+            ],
+            [
+              328,
+              818
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Fother s Name'",
+          "confidence": 0.45109315325192423,
+          "bbox": [
+            [
+              51,
+              831
+            ],
+            [
+              197,
+              831
+            ],
+            [
+              197,
+              849
+            ],
+            [
+              51,
+              849
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Abu",
+          "confidence": 0.9959247853992069,
+          "bbox": [
+            [
+              210,
+              820
+            ],
+            [
+              268,
+              820
+            ],
+            [
+              268,
+              846
+            ],
+            [
+              210,
+              846
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "kalam",
+          "confidence": 0.5434384544456456,
+          "bbox": [
+            [
+              278,
+              818
+            ],
+            [
+              342,
+              818
+            ],
+            [
+              342,
+              844
+            ],
+            [
+              278,
+              844
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Azad",
+          "confidence": 0.6775652170181274,
+          "bbox": [
+            [
+              356,
+              816
+            ],
+            [
+              414,
+              816
+            ],
+            [
+              414,
+              842
+            ],
+            [
+              356,
+              842
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Mother $ Name",
+          "confidence": 0.6969274997104566,
+          "bbox": [
+            [
+              53,
+              859
+            ],
+            [
+              201,
+              859
+            ],
+            [
+              201,
+              877
+            ],
+            [
+              53,
+              877
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Feroza",
+          "confidence": 0.8023994398039176,
+          "bbox": [
+            [
+              210,
+              848
+            ],
+            [
+              284,
+              848
+            ],
+            [
+              284,
+              872
+            ],
+            [
+              210,
+              872
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Dequm",
+          "confidence": 0.4233114071511188,
+          "bbox": [
+            [
+              289,
+              842
+            ],
+            [
+              373,
+              842
+            ],
+            [
+              373,
+              883
+            ],
+            [
+              289,
+              883
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Profession\"",
+          "confidence": 0.7526306780096085,
+          "bbox": [
+            [
+              51,
+              887
+            ],
+            [
+              173,
+              887
+            ],
+            [
+              173,
+              905
+            ],
+            [
+              51,
+              905
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "House",
+          "confidence": 0.6522831677134558,
+          "bbox": [
+            [
+              186,
+              878
+            ],
+            [
+              252,
+              878
+            ],
+            [
+              252,
+              902
+            ],
+            [
+              186,
+              902
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "cufe",
+          "confidence": 0.7570310363231646,
+          "bbox": [
+            [
+              249,
+              867
+            ],
+            [
+              311,
+              867
+            ],
+            [
+              311,
+              903
+            ],
+            [
+              249,
+              903
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Contact Details",
+          "confidence": 0.9902651027749874,
+          "bbox": [
+            [
+              57,
+              925
+            ],
+            [
+              155,
+              925
+            ],
+            [
+              155,
+              943
+            ],
+            [
+              57,
+              943
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Residence Status",
+          "confidence": 0.9066724195866694,
+          "bbox": [
+            [
+              51,
+              963
+            ],
+            [
+              159,
+              963
+            ],
+            [
+              159,
+              981
+            ],
+            [
+              51,
+              981
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Own",
+          "confidence": 0.9986232725965768,
+          "bbox": [
+            [
+              191,
+              963
+            ],
+            [
+              221,
+              963
+            ],
+            [
+              221,
+              979
+            ],
+            [
+              191,
+              979
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Fomly Owneo",
+          "confidence": 0.7104125380750789,
+          "bbox": [
+            [
+              261,
+              963
+            ],
+            [
+              351,
+              963
+            ],
+            [
+              351,
+              981
+            ],
+            [
+              261,
+              981
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Rentea",
+          "confidence": 0.6365772727275539,
+          "bbox": [
+            [
+              391,
+              961
+            ],
+            [
+              439,
+              961
+            ],
+            [
+              439,
+              979
+            ],
+            [
+              391,
+              979
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Gov",
+          "confidence": 0.810378132150617,
+          "bbox": [
+            [
+              475,
+              963
+            ],
+            [
+              509,
+              963
+            ],
+            [
+              509,
+              979
+            ],
+            [
+              475,
+              979
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Other",
+          "confidence": 0.23101966695552925,
+          "bbox": [
+            [
+              553,
+              963
+            ],
+            [
+              591,
+              963
+            ],
+            [
+              591,
+              979
+            ],
+            [
+              553,
+              979
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Present Adaess:",
+          "confidence": 0.4905750509436972,
+          "bbox": [
+            [
+              51,
+              995
+            ],
+            [
+              157,
+              995
+            ],
+            [
+              157,
+              1011
+            ],
+            [
+              51,
+              1011
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Nasima _Villa,tlouse_No",
+          "confidence": 0.5223964201261576,
+          "bbox": [
+            [
+              161,
+              980
+            ],
+            [
+              392,
+              980
+            ],
+            [
+              392,
+              1010
+            ],
+            [
+              161,
+              1010
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Ig27 /0d0,",
+          "confidence": 0.08283174864987917,
+          "bbox": [
+            [
+              412,
+              982
+            ],
+            [
+              506,
+              982
+            ],
+            [
+              506,
+              1006
+            ],
+            [
+              412,
+              1006
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Lalan",
+          "confidence": 0.7448744879445928,
+          "bbox": [
+            [
+              512,
+              982
+            ],
+            [
+              570,
+              982
+            ],
+            [
+              570,
+              1006
+            ],
+            [
+              512,
+              1006
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Dahit Pan . Rupchl, Baxbal-cw",
+          "confidence": 0.05117106376866139,
+          "bbox": [
+            [
+              568,
+              972
+            ],
+            [
+              872,
+              972
+            ],
+            [
+              872,
+              1022
+            ],
+            [
+              568,
+              1022
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "No; of Yeers & Present Adess'",
+          "confidence": 0.38879101961368534,
+          "bbox": [
+            [
+              49,
+              1023
+            ],
+            [
+              251,
+              1023
+            ],
+            [
+              251,
+              1041
+            ],
+            [
+              49,
+              1041
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Months",
+          "confidence": 0.7546464912477745,
+          "bbox": [
+            [
+              551,
+              1025
+            ],
+            [
+              599,
+              1025
+            ],
+            [
+              599,
+              1041
+            ],
+            [
+              551,
+              1041
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Permonent Address\"",
+          "confidence": 0.8132454112576146,
+          "bbox": [
+            [
+              53,
+              1055
+            ],
+            [
+              177,
+              1055
+            ],
+            [
+              177,
+              1071
+            ],
+            [
+              53,
+              1071
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Musbnpta",
+          "confidence": 0.2753528212048753,
+          "bbox": [
+            [
+              182,
+              1042
+            ],
+            [
+              318,
+              1042
+            ],
+            [
+              318,
+              1070
+            ],
+            [
+              182,
+              1070
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "BaqunA Sadan",
+          "confidence": 0.4600338168638115,
+          "bbox": [
+            [
+              336,
+              1037
+            ],
+            [
+              511,
+              1037
+            ],
+            [
+              511,
+              1081
+            ],
+            [
+              336,
+              1081
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Barguna",
+          "confidence": 0.0564831396582055,
+          "bbox": [
+            [
+              525,
+              1040
+            ],
+            [
+              625,
+              1040
+            ],
+            [
+              625,
+              1079
+            ],
+            [
+              525,
+              1079
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Telephone No",
+          "confidence": 0.9895027327838225,
+          "bbox": [
+            [
+              53,
+              1085
+            ],
+            [
+              143,
+              1085
+            ],
+            [
+              143,
+              1103
+            ],
+            [
+              53,
+              1103
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Moble No'",
+          "confidence": 0.46006785460461197,
+          "bbox": [
+            [
+              454,
+              1084
+            ],
+            [
+              525,
+              1084
+            ],
+            [
+              525,
+              1104
+            ],
+            [
+              454,
+              1104
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "0l7i7649301",
+          "confidence": 0.5292298478562806,
+          "bbox": [
+            [
+              532,
+              1069
+            ],
+            [
+              709,
+              1069
+            ],
+            [
+              709,
+              1108
+            ],
+            [
+              532,
+              1108
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Wok Address (f wokingt_",
+          "confidence": 0.4317696935282393,
+          "bbox": [
+            [
+              53,
+              1115
+            ],
+            [
+              265,
+              1115
+            ],
+            [
+              265,
+              1135
+            ],
+            [
+              53,
+              1135
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Spouse Telephone No'",
+          "confidence": 0.8160938208152291,
+          "bbox": [
+            [
+              53,
+              1144
+            ],
+            [
+              193,
+              1144
+            ],
+            [
+              193,
+              1164
+            ],
+            [
+              53,
+              1164
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Moble No'",
+          "confidence": 0.7962865297180255,
+          "bbox": [
+            [
+              437,
+              1147
+            ],
+            [
+              507,
+              1147
+            ],
+            [
+              507,
+              1163
+            ],
+            [
+              437,
+              1163
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "03 0f 12",
+          "confidence": 0.5944641840803555,
+          "bbox": [
+            [
+              758,
+              1182
+            ],
+            [
+              807,
+              1182
+            ],
+            [
+              807,
+              1201
+            ],
+            [
+              758,
+              1201
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "'Y+ti",
+          "confidence": 0.11821074247093012,
+          "bbox": [
+            [
+              530,
+              1186
+            ],
+            [
+              614,
+              1186
+            ],
+            [
+              614,
+              1236
+            ],
+            [
+              530,
+              1236
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Lu)",
+          "confidence": 0.17893231560484613,
+          "bbox": [
+            [
+              674,
+              1216
+            ],
+            [
+              708,
+              1216
+            ],
+            [
+              708,
+              1242
+            ],
+            [
+              674,
+              1242
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Yeas",
+          "confidence": 0.9975194931030273,
+          "bbox": [
+            [
+              403,
+              1020
+            ],
+            [
+              443,
+              1028
+            ],
+            [
+              440,
+              1044
+            ],
+            [
+              400,
+              1037
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Paze",
+          "confidence": 0.8954172730445862,
+          "bbox": [
+            [
+              729,
+              1183
+            ],
+            [
+              761,
+              1187
+            ],
+            [
+              758,
+              1205
+            ],
+            [
+              726,
+              1201
+            ]
+          ],
+          "engine": "easyocr"
+        }
+      ]
+    },
+    {
+      "page_number": 2,
+      "size": [
+        884,
+        1300
+      ],
+      "text": "Professional Details\nService Holder\nNeme of Compony:\nDeslgnetlon'\nDepartment\nOffice Address'\nOffice Phone:\nE-moll:\nPresent Length of Service:L\nYearst\nMonths\nName of Prevlous Employer:\nAddress_\nPhone'\nYears With Previous Organization:\nYears\nMonths\nTotel Service Length\nYeors\nMonths\nSelf Employed\nProfession:\nNo of Years in Profession:\nName of Organizetion:\nOffice Address\"\nOffice Phone:\nE-mai\nStatus of Office Premise-\nOwned\nRented\nBusinessman\nName of the Organization:_\nMS\nJOTI\nENIERRRISE\nBusiness Address:_\nSadarc\nRoad ,\n(ks\nOarrguna, Bartquna\nOffice Phone:\nO1zI7 649B01/\nE_mai\nStatus of Office Premises:\nOwned\nRented\nOthers\nType of Business:\nProprietorship\nPartaership\nLlmited\nOthers\nNature of Business:\nKon\nshrtuconand Supphwesrs-h Business:\n05\nNo of Staff:\nProperty Owner\nAddress of Leased/ Rent out Premises:\nNo. of Flat:\nTotal Rented Area in Sft (Appx}:\n4u\nPage 04 of 12\nA)",
+      "preview_file": "ocr_preview_page_2.png",
+      "detections": [
+        {
+          "text": "Professional Details",
+          "confidence": 0.8739073308026019,
+          "bbox": [
+            [
+              60,
+              42
+            ],
+            [
+              191,
+              42
+            ],
+            [
+              191,
+              63
+            ],
+            [
+              60,
+              63
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Service Holder",
+          "confidence": 0.9347121534236643,
+          "bbox": [
+            [
+              60,
+              68
+            ],
+            [
+              158,
+              68
+            ],
+            [
+              158,
+              92
+            ],
+            [
+              60,
+              92
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Neme of Compony:",
+          "confidence": 0.7877883917683922,
+          "bbox": [
+            [
+              62,
+              121
+            ],
+            [
+              188,
+              121
+            ],
+            [
+              188,
+              146
+            ],
+            [
+              62,
+              146
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Deslgnetlon'",
+          "confidence": 0.3067384331879093,
+          "bbox": [
+            [
+              63,
+              161
+            ],
+            [
+              141,
+              161
+            ],
+            [
+              141,
+              181
+            ],
+            [
+              63,
+              181
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Department",
+          "confidence": 0.8433317680624971,
+          "bbox": [
+            [
+              431,
+              163
+            ],
+            [
+              507,
+              163
+            ],
+            [
+              507,
+              181
+            ],
+            [
+              431,
+              181
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Office Address'",
+          "confidence": 0.8913431176029287,
+          "bbox": [
+            [
+              65,
+              197
+            ],
+            [
+              163,
+              197
+            ],
+            [
+              163,
+              215
+            ],
+            [
+              65,
+              215
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Office Phone:",
+          "confidence": 0.709734560933487,
+          "bbox": [
+            [
+              64,
+              232
+            ],
+            [
+              149,
+              232
+            ],
+            [
+              149,
+              252
+            ],
+            [
+              64,
+              252
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "E-moll:",
+          "confidence": 0.6249473790782163,
+          "bbox": [
+            [
+              327,
+              237
+            ],
+            [
+              373,
+              237
+            ],
+            [
+              373,
+              253
+            ],
+            [
+              327,
+              253
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Present Length of Service:L",
+          "confidence": 0.6579222805646027,
+          "bbox": [
+            [
+              509,
+              235
+            ],
+            [
+              677,
+              235
+            ],
+            [
+              677,
+              255
+            ],
+            [
+              509,
+              255
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Yearst",
+          "confidence": 0.6565512570527072,
+          "bbox": [
+            [
+              717,
+              237
+            ],
+            [
+              755,
+              237
+            ],
+            [
+              755,
+              253
+            ],
+            [
+              717,
+              253
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Months",
+          "confidence": 0.9957554284928083,
+          "bbox": [
+            [
+              796,
+              234
+            ],
+            [
+              849,
+              234
+            ],
+            [
+              849,
+              260
+            ],
+            [
+              796,
+              260
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Name of Prevlous Employer:",
+          "confidence": 0.6110344970285759,
+          "bbox": [
+            [
+              67,
+              271
+            ],
+            [
+              245,
+              271
+            ],
+            [
+              245,
+              289
+            ],
+            [
+              67,
+              289
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Address_",
+          "confidence": 0.6345466019099566,
+          "bbox": [
+            [
+              69,
+              307
+            ],
+            [
+              123,
+              307
+            ],
+            [
+              123,
+              323
+            ],
+            [
+              69,
+              323
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Phone'",
+          "confidence": 0.8143282580938191,
+          "bbox": [
+            [
+              69,
+              343
+            ],
+            [
+              111,
+              343
+            ],
+            [
+              111,
+              359
+            ],
+            [
+              69,
+              359
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Years With Previous Organization:",
+          "confidence": 0.7120772354135932,
+          "bbox": [
+            [
+              461,
+              344
+            ],
+            [
+              665,
+              344
+            ],
+            [
+              665,
+              365
+            ],
+            [
+              461,
+              365
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Years",
+          "confidence": 0.9999309606592728,
+          "bbox": [
+            [
+              711,
+              345
+            ],
+            [
+              749,
+              345
+            ],
+            [
+              749,
+              363
+            ],
+            [
+              711,
+              363
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Months",
+          "confidence": 0.9993838819269342,
+          "bbox": [
+            [
+              795,
+              347
+            ],
+            [
+              843,
+              347
+            ],
+            [
+              843,
+              367
+            ],
+            [
+              795,
+              367
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Totel Service Length",
+          "confidence": 0.8914547334347339,
+          "bbox": [
+            [
+              68,
+              374
+            ],
+            [
+              200,
+              374
+            ],
+            [
+              200,
+              398
+            ],
+            [
+              68,
+              398
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Yeors",
+          "confidence": 0.9078099218064973,
+          "bbox": [
+            [
+              243,
+              379
+            ],
+            [
+              281,
+              379
+            ],
+            [
+              281,
+              397
+            ],
+            [
+              243,
+              397
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Months",
+          "confidence": 0.9998786228746974,
+          "bbox": [
+            [
+              333,
+              379
+            ],
+            [
+              383,
+              379
+            ],
+            [
+              383,
+              399
+            ],
+            [
+              333,
+              399
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Self Employed",
+          "confidence": 0.9900576852353137,
+          "bbox": [
+            [
+              70,
+              440
+            ],
+            [
+              178,
+              440
+            ],
+            [
+              178,
+              466
+            ],
+            [
+              70,
+              466
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Profession:",
+          "confidence": 0.9939135467085995,
+          "bbox": [
+            [
+              68,
+              499
+            ],
+            [
+              143,
+              499
+            ],
+            [
+              143,
+              520
+            ],
+            [
+              68,
+              520
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "No of Years in Profession:",
+          "confidence": 0.8793787854907565,
+          "bbox": [
+            [
+              541,
+              505
+            ],
+            [
+              715,
+              505
+            ],
+            [
+              715,
+              523
+            ],
+            [
+              541,
+              523
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Name of Organizetion:",
+          "confidence": 0.8150627360387495,
+          "bbox": [
+            [
+              68,
+              544
+            ],
+            [
+              214,
+              544
+            ],
+            [
+              214,
+              570
+            ],
+            [
+              68,
+              570
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Office Address\"",
+          "confidence": 0.8996865054075217,
+          "bbox": [
+            [
+              70,
+              593
+            ],
+            [
+              175,
+              593
+            ],
+            [
+              175,
+              613
+            ],
+            [
+              70,
+              613
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Office Phone:",
+          "confidence": 0.9873822523811783,
+          "bbox": [
+            [
+              71,
+              639
+            ],
+            [
+              161,
+              639
+            ],
+            [
+              161,
+              659
+            ],
+            [
+              71,
+              659
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "E-mai",
+          "confidence": 0.9942410881231908,
+          "bbox": [
+            [
+              331,
+              645
+            ],
+            [
+              377,
+              645
+            ],
+            [
+              377,
+              663
+            ],
+            [
+              331,
+              663
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Status of Office Premise-",
+          "confidence": 0.7471201956172246,
+          "bbox": [
+            [
+              499,
+              645
+            ],
+            [
+              655,
+              645
+            ],
+            [
+              655,
+              665
+            ],
+            [
+              499,
+              665
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Owned",
+          "confidence": 0.9997491632558707,
+          "bbox": [
+            [
+              695,
+              649
+            ],
+            [
+              745,
+              649
+            ],
+            [
+              745,
+              665
+            ],
+            [
+              695,
+              665
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Rented",
+          "confidence": 0.9995229892717888,
+          "bbox": [
+            [
+              785,
+              649
+            ],
+            [
+              833,
+              649
+            ],
+            [
+              833,
+              667
+            ],
+            [
+              785,
+              667
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Businessman",
+          "confidence": 0.9973100241522345,
+          "bbox": [
+            [
+              83,
+              709
+            ],
+            [
+              179,
+              709
+            ],
+            [
+              179,
+              725
+            ],
+            [
+              83,
+              725
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Name of the Organization:_",
+          "confidence": 0.7752246528141542,
+          "bbox": [
+            [
+              73,
+              745
+            ],
+            [
+              244,
+              745
+            ],
+            [
+              244,
+              770
+            ],
+            [
+              73,
+              770
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "MS",
+          "confidence": 0.975768588296171,
+          "bbox": [
+            [
+              264,
+              742
+            ],
+            [
+              312,
+              742
+            ],
+            [
+              312,
+              766
+            ],
+            [
+              264,
+              766
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "JOTI",
+          "confidence": 0.44860580563545227,
+          "bbox": [
+            [
+              347,
+              745
+            ],
+            [
+              403,
+              745
+            ],
+            [
+              403,
+              765
+            ],
+            [
+              347,
+              765
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "ENIERRRISE",
+          "confidence": 0.6468562071423055,
+          "bbox": [
+            [
+              414,
+              742
+            ],
+            [
+              540,
+              742
+            ],
+            [
+              540,
+              768
+            ],
+            [
+              414,
+              768
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Business Address:_",
+          "confidence": 0.8811035398161909,
+          "bbox": [
+            [
+              79,
+              785
+            ],
+            [
+              203,
+              785
+            ],
+            [
+              203,
+              803
+            ],
+            [
+              79,
+              803
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Sadarc",
+          "confidence": 0.24667443396222313,
+          "bbox": [
+            [
+              235,
+              770
+            ],
+            [
+              322,
+              770
+            ],
+            [
+              322,
+              802
+            ],
+            [
+              235,
+              802
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Road ,",
+          "confidence": 0.14138981274165607,
+          "bbox": [
+            [
+              337,
+              773
+            ],
+            [
+              423,
+              773
+            ],
+            [
+              423,
+              809
+            ],
+            [
+              337,
+              809
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "(ks",
+          "confidence": 0.16368651344364,
+          "bbox": [
+            [
+              430,
+              774
+            ],
+            [
+              472,
+              774
+            ],
+            [
+              472,
+              802
+            ],
+            [
+              430,
+              802
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Oarrguna, Bartquna",
+          "confidence": 0.1805602348422277,
+          "bbox": [
+            [
+              501,
+              774
+            ],
+            [
+              721,
+              774
+            ],
+            [
+              721,
+              811
+            ],
+            [
+              501,
+              811
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Office Phone:",
+          "confidence": 0.6539599789658187,
+          "bbox": [
+            [
+              77,
+              819
+            ],
+            [
+              167,
+              819
+            ],
+            [
+              167,
+              837
+            ],
+            [
+              77,
+              837
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "O1zI7 649B01/",
+          "confidence": 0.07335868318861548,
+          "bbox": [
+            [
+              175,
+              807
+            ],
+            [
+              339,
+              807
+            ],
+            [
+              339,
+              843
+            ],
+            [
+              175,
+              843
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "E_mai",
+          "confidence": 0.7299351946437475,
+          "bbox": [
+            [
+              595,
+              825
+            ],
+            [
+              641,
+              825
+            ],
+            [
+              641,
+              841
+            ],
+            [
+              595,
+              841
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Status of Office Premises:",
+          "confidence": 0.8682581477541368,
+          "bbox": [
+            [
+              77,
+              853
+            ],
+            [
+              245,
+              853
+            ],
+            [
+              245,
+              873
+            ],
+            [
+              77,
+              873
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Owned",
+          "confidence": 0.9999401837080075,
+          "bbox": [
+            [
+              279,
+              857
+            ],
+            [
+              327,
+              857
+            ],
+            [
+              327,
+              875
+            ],
+            [
+              279,
+              875
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Rented",
+          "confidence": 0.9967851130120085,
+          "bbox": [
+            [
+              361,
+              855
+            ],
+            [
+              411,
+              855
+            ],
+            [
+              411,
+              875
+            ],
+            [
+              361,
+              875
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Others",
+          "confidence": 0.9999013022523089,
+          "bbox": [
+            [
+              441,
+              857
+            ],
+            [
+              485,
+              857
+            ],
+            [
+              485,
+              875
+            ],
+            [
+              441,
+              875
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Type of Business:",
+          "confidence": 0.8111355253951781,
+          "bbox": [
+            [
+              78,
+              888
+            ],
+            [
+              200,
+              888
+            ],
+            [
+              200,
+              912
+            ],
+            [
+              78,
+              912
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Proprietorship",
+          "confidence": 0.9983348072980569,
+          "bbox": [
+            [
+              249,
+              891
+            ],
+            [
+              341,
+              891
+            ],
+            [
+              341,
+              911
+            ],
+            [
+              249,
+              911
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Partaership",
+          "confidence": 0.5735164565470672,
+          "bbox": [
+            [
+              379,
+              893
+            ],
+            [
+              453,
+              893
+            ],
+            [
+              453,
+              911
+            ],
+            [
+              379,
+              911
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Llmited",
+          "confidence": 0.8593480275194834,
+          "bbox": [
+            [
+              483,
+              891
+            ],
+            [
+              535,
+              891
+            ],
+            [
+              535,
+              911
+            ],
+            [
+              483,
+              911
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Others",
+          "confidence": 0.9998196851532054,
+          "bbox": [
+            [
+              585,
+              893
+            ],
+            [
+              631,
+              893
+            ],
+            [
+              631,
+              914
+            ],
+            [
+              585,
+              914
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Nature of Business:",
+          "confidence": 0.7602758596705502,
+          "bbox": [
+            [
+              79,
+              925
+            ],
+            [
+              209,
+              925
+            ],
+            [
+              209,
+              945
+            ],
+            [
+              79,
+              945
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Kon",
+          "confidence": 0.9534243610206532,
+          "bbox": [
+            [
+              228,
+              916
+            ],
+            [
+              270,
+              916
+            ],
+            [
+              270,
+              940
+            ],
+            [
+              228,
+              940
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "shrtuconand Supphwesrs-h Business:",
+          "confidence": 0.16049618517342626,
+          "bbox": [
+            [
+              265,
+              907
+            ],
+            [
+              583,
+              907
+            ],
+            [
+              583,
+              949
+            ],
+            [
+              265,
+              949
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "05",
+          "confidence": 0.8034675763659638,
+          "bbox": [
+            [
+              596,
+              926
+            ],
+            [
+              630,
+              926
+            ],
+            [
+              630,
+              952
+            ],
+            [
+              596,
+              952
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "No of Staff:",
+          "confidence": 0.872305578555843,
+          "bbox": [
+            [
+              669,
+              931
+            ],
+            [
+              747,
+              931
+            ],
+            [
+              747,
+              949
+            ],
+            [
+              669,
+              949
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Property Owner",
+          "confidence": 0.8124617881379835,
+          "bbox": [
+            [
+              85,
+              973
+            ],
+            [
+              202,
+              973
+            ],
+            [
+              202,
+              999
+            ],
+            [
+              85,
+              999
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Address of Leased/ Rent out Premises:",
+          "confidence": 0.87718765838543,
+          "bbox": [
+            [
+              83,
+              1015
+            ],
+            [
+              339,
+              1015
+            ],
+            [
+              339,
+              1035
+            ],
+            [
+              83,
+              1035
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "No. of Flat:",
+          "confidence": 0.7704744817926247,
+          "bbox": [
+            [
+              83,
+              1057
+            ],
+            [
+              155,
+              1057
+            ],
+            [
+              155,
+              1077
+            ],
+            [
+              83,
+              1077
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Total Rented Area in Sft (Appx}:",
+          "confidence": 0.607699500017057,
+          "bbox": [
+            [
+              84,
+              1096
+            ],
+            [
+              290,
+              1096
+            ],
+            [
+              290,
+              1120
+            ],
+            [
+              84,
+              1120
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "4u",
+          "confidence": 0.3287460365235724,
+          "bbox": [
+            [
+              182,
+              1158
+            ],
+            [
+              230,
+              1158
+            ],
+            [
+              230,
+              1184
+            ],
+            [
+              182,
+              1184
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "Page 04 of 12",
+          "confidence": 0.9946804333165123,
+          "bbox": [
+            [
+              763,
+              1175
+            ],
+            [
+              837,
+              1175
+            ],
+            [
+              837,
+              1193
+            ],
+            [
+              763,
+              1193
+            ]
+          ],
+          "engine": "easyocr"
+        },
+        {
+          "text": "A)",
+          "confidence": 0.1246195865509715,
+          "bbox": [
+            [
+              682,
+              1168
+            ],
+            [
+              727,
+              1162
+            ],
+            [
+              729,
+              1185
+            ],
+            [
+              684,
+              1190
+            ]
+          ],
+          "engine": "easyocr"
+        }
+      ]
+    },
+    {
+      "page_number": 3,
+      "size": [
+        937,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_3.png",
+      "detections": []
+    },
+    {
+      "page_number": 4,
+      "size": [
+        877,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_4.png",
+      "detections": []
+    },
+    {
+      "page_number": 5,
+      "size": [
+        940,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_5.png",
+      "detections": []
+    },
+    {
+      "page_number": 6,
+      "size": [
+        920,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_6.png",
+      "detections": []
+    },
+    {
+      "page_number": 7,
+      "size": [
+        930,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_7.png",
+      "detections": []
+    },
+    {
+      "page_number": 8,
+      "size": [
+        990,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_8.png",
+      "detections": []
+    },
+    {
+      "page_number": 9,
+      "size": [
+        891,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_9.png",
+      "detections": []
+    },
+    {
+      "page_number": 10,
+      "size": [
+        932,
+        1300
+      ],
+      "text": "",
+      "preview_file": "ocr_preview_page_10.png",
+      "detections": []
+    }
+  ],
+  "meta": {
+    "page_count": 10,
+    "source_file": "Home_Loan_-_Optima_ID_111060_20260407_130744.pdf",
+    "target_form_file": "Home_Loan_Booklet_20260407_130744.pdf",
+    "available_pdf_field_count": 0,
+    "form_fill_status": "completed",
+    "form_fill_message": "Filled the provided template using mapped OCR regions because the PDF has no fillable form fields.",
+    "input_type": "pdf",
+    "parsed_at": "2026-04-07T14:32:20",
+    "workflow_mode": "ocr_first_form_fill",
+    "fill_mode": "mapped_overlay",
+    "filled_field_count": 2
   },
   "tables": {
     "monthly_income": {
@@ -20,14 +3997,5 @@
   },
   "stamps": {
     "official_stamp": "[NO_STAMP]"
-  },
-  "meta": {
-    "page_count": 10,
-    "source_file": "Home_Loan_-_Optima_ID_111060_2_20260406_105745.pdf",
-    "template_file": "Home_Loan_Booklet_20260406_105218.pdf",
-    "template_source": "uploaded_form",
-    "input_type": "pdf",
-    "parsed_at": "2026-04-06T10:58:00",
-    "fill_error": "The provided PDF has no fillable form fields. Upload a fillable PDF or use the built-in mapped template."
   }
 }

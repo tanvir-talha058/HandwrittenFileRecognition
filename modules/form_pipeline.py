@@ -41,7 +41,18 @@ def run_form_ocr_pipeline(
     source_pages = load_document_images(input_path)
     source_pages_bgr = [pil_to_bgr(page) for page in source_pages]
 
-    pages = build_page_previews(source_pages_bgr, output_dir, ocr_engine)
+    # Full-page OCR previews are expensive on CPU; limit them when Paddle is unavailable.
+    max_preview_ocr_pages = len(source_pages_bgr)
+    if getattr(ocr_engine, "_paddle", None) is None:
+        max_preview_ocr_pages = min(2, len(source_pages_bgr))
+
+    pages = build_page_previews(
+        source_pages_bgr,
+        output_dir,
+        ocr_engine,
+        max_ocr_pages=max_preview_ocr_pages,
+        preview_max_side=1300 if getattr(ocr_engine, "_paddle", None) is None else 1700,
+    )
     result = {
         "fields": {},
         "field_matches": [],
@@ -98,11 +109,13 @@ def build_page_previews(
     pages_bgr: List[np.ndarray],
     output_dir: Path,
     ocr_engine: HybridOCREngine,
+    max_ocr_pages: int = 0,
+    preview_max_side: int = 1700,
 ) -> List[Dict]:
     pages = []
     for idx, page in enumerate(pages_bgr, start=1):
-        preview_page = resize_for_preview(page)
-        detections = ocr_engine.read_page(preview_page)
+        preview_page = resize_for_preview(page, max_side=preview_max_side)
+        detections = ocr_engine.read_page(preview_page) if idx <= max_ocr_pages else []
         preview_name = f"{PREVIEW_PREFIX}{idx}.png"
         save_ocr_preview(preview_page, detections, output_dir / preview_name)
         pages.append(

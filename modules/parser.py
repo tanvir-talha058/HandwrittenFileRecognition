@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from .checkbox_detector import detect_checkbox_state
 from .ocr_engine import HybridOCREngine
-from .preprocess import preprocess_roi
+from .preprocess import clamp_bbox, preprocess_roi
 from .signature_detector import detect_signature_present, signature_placeholder
 from .stamp_detector import detect_stamp_present
 from .table_parser import parse_table_text
@@ -60,8 +60,41 @@ class LoanFormParser:
                 mapping = field.get("value_map", {})
                 output["fields"][name] = mapping.get(state, state)
             else:
-                proc = preprocess_roi(roi)
-                output["fields"][name] = self.ocr.read_text(proc)
+                output["fields"][name] = self._read_text_with_bbox_expansion(page_img, bbox)
+
+    def _read_text_with_bbox_expansion(self, page_img, bbox) -> str:
+        h, w = page_img.shape[:2]
+        x1, y1, x2, y2 = bbox
+        bw = max(1, int(x2 - x1))
+        bh = max(1, int(y2 - y1))
+
+        best_text = ""
+        best_score = (-1, -1.0, -1)
+        for pad_x_ratio, pad_y_ratio in [(0.0, 0.0), (0.12, 0.2), (0.22, 0.35)]:
+            expanded = clamp_bbox(
+                [
+                    int(x1 - (bw * pad_x_ratio)),
+                    int(y1 - (bh * pad_y_ratio)),
+                    int(x2 + (bw * pad_x_ratio)),
+                    int(y2 + (bh * pad_y_ratio)),
+                ],
+                w,
+                h,
+            )
+            roi = self.mapper.extract_region(page_img, expanded)
+            if roi is None:
+                continue
+
+            proc = preprocess_roi(roi)
+            region = self.ocr.read_region(proc)
+            text = str(region.get("text", "")).strip()
+            confidence = float(region.get("confidence", 0.0) or 0.0)
+            score = (1 if text else 0, confidence, len(text))
+            if score > best_score:
+                best_score = score
+                best_text = text
+
+        return best_text
 
     def _parse_tables(self, pages_bgr, output: Dict):
         for table in self.mapper.get_table_regions():

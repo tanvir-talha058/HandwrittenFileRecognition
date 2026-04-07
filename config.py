@@ -4,10 +4,10 @@ from pathlib import Path
 
 @dataclass
 class OCRConfig:
-    use_paddle: bool = True
-    use_easyocr: bool = False
+    use_paddle: bool = False
+    use_easyocr: bool = True
     use_tesseract: bool = False
-    strict_paddle: bool = True
+    strict_paddle: bool = False
     language: str = "en"
     paddle_device: str = "cpu"
     paddle_enable_mkldnn: bool = False

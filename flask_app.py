@@ -15,9 +15,13 @@ from werkzeug.utils import secure_filename
 
 from config import AppConfig
 from modules.document_loader import SUPPORTED_INPUT_SUFFIXES, is_supported_input_file
-from modules.form_pipeline import PREVIEW_PREFIX, run_form_ocr_pipeline
+from modules.form_pipeline import PREVIEW_PREFIX, align_page_to_template, run_form_ocr_pipeline
 from modules.formatter import save_excel, save_filled_pdf, save_json, save_text
+from modules.parser import LoanFormParser
+from modules.preprocess import pil_to_bgr
 from modules.ocr_engine import HybridOCREngine
+from modules.template_mapper import TemplateMapper
+from modules.document_loader import load_document_images
 
 
 app = Flask(__name__)
@@ -157,10 +161,11 @@ def build_full_text(parsed: dict) -> str:
 
 
 def process_input_file(input_path: Path, target_form_path: Path | None = None):
+    ocr_engine = build_ocr_engine()
     parsed = run_form_ocr_pipeline(
         input_path=input_path,
         output_dir=OUTPUT_DIR,
-        ocr_engine=build_ocr_engine(),
+        ocr_engine=ocr_engine,
         target_form_path=target_form_path,
     )
     parsed.setdefault("meta", {})
@@ -180,6 +185,66 @@ def process_input_file(input_path: Path, target_form_path: Path | None = None):
             parsed["meta"].update(fill_meta)
             parsed["meta"]["form_fill_status"] = "completed"
             parsed["meta"]["form_fill_message"] = f"Filled {Path(target_form_path).name} using OCR-extracted field values."
+        except Exception as exc:
+            remove_filled_output()
+            parsed["meta"]["form_fill_status"] = "failed"
+            parsed["meta"]["form_fill_message"] = str(exc)
+    elif target_form_path is not None and parsed["meta"].get("available_pdf_field_count", 0) == 0:
+        try:
+            mapper = TemplateMapper(cfg.default_field_map)
+            source_pages = [pil_to_bgr(page) for page in load_document_images(input_path)]
+            target_pages = [pil_to_bgr(page) for page in load_document_images(Path(target_form_path))]
+
+            aligned_pages = []
+            for idx, source_page in enumerate(source_pages):
+                if idx < len(target_pages):
+                    aligned_page, _ = align_page_to_template(source_page, target_pages[idx])
+                    aligned_pages.append(aligned_page)
+                else:
+                    aligned_pages.append(source_page)
+
+            mapped = LoanFormParser(mapper, ocr_engine).parse(aligned_pages)
+            parsed["fields"] = mapped.get("fields", {})
+            parsed["tables"] = mapped.get("tables", {})
+            parsed["signatures"] = mapped.get("signatures", {})
+            parsed["stamps"] = mapped.get("stamps", {})
+            parsed["field_matches"] = [
+                {
+                    "name": name,
+                    "page_number": next(
+                        (
+                            item.get("page")
+                            for item in mapper.get_fields()
+                            if item.get("name") == name
+                        ),
+                        None,
+                    ),
+                    "value": value,
+                    "confidence": None,
+                    "field_type": "mapped_text",
+                    "status": "mapped_extracted" if str(value).strip() else "empty",
+                }
+                for name, value in parsed["fields"].items()
+            ]
+
+            page_image_sizes = {
+                idx: (int(page.shape[1]), int(page.shape[0]))
+                for idx, page in enumerate(target_pages, start=1)
+            }
+
+            fill_meta = save_filled_pdf(
+                parsed,
+                template_pdf_path=Path(target_form_path),
+                out_pdf_path=OUTPUT_DIR / "loan_form_output_filled.pdf",
+                field_map=mapper.template,
+                page_image_sizes=page_image_sizes,
+                mode="overlay",
+            )
+            parsed["meta"].update(fill_meta)
+            parsed["meta"]["form_fill_status"] = "completed"
+            parsed["meta"]["form_fill_message"] = (
+                "Filled the provided template using mapped OCR regions because the PDF has no fillable form fields."
+            )
         except Exception as exc:
             remove_filled_output()
             parsed["meta"]["form_fill_status"] = "failed"
