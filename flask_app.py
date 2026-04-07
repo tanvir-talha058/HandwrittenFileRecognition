@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -160,6 +161,87 @@ def build_full_text(parsed: dict) -> str:
     return "\n\n".join(chunks)
 
 
+def _normalize_mobile(candidate: str) -> str:
+    raw = (
+        (candidate or "")
+        .replace("O", "0")
+        .replace("o", "0")
+        .replace("I", "1")
+        .replace("i", "1")
+        .replace("l", "1")
+    )
+    digits = "".join(ch for ch in raw if ch.isdigit())
+    if len(digits) in {10, 11, 12} and digits.startswith("01"):
+        return digits
+    return ""
+
+
+def _enrich_fields_from_page_text(parsed: dict):
+    fields = parsed.get("fields", {})
+    pages = parsed.get("pages", [])
+    page1_text = (pages[0].get("text") if pages else "") or ""
+    page2_text = (pages[1].get("text") if len(pages) > 1 else "") or ""
+
+    compact1 = page1_text.replace("\n", " ")
+    compact2 = page2_text.replace("\n", " ")
+
+    current_name = str(fields.get("full_name") or "").strip()
+    if not current_name or any(word in current_name.lower() for word in ["business", "busines", "profession", "female", "male", "fomolo"]):
+        match = re.search(
+            r"full\s*n[ao]me\s*[:;]?\s*(.{2,80}?)(?:profession|gender|gonoor|d[ao]te\s*of\s*birth)",
+            compact1,
+            flags=re.IGNORECASE,
+        )
+        if match:
+            candidate = re.sub(r"[^A-Za-z.\s]", " ", match.group(1))
+            candidate = " ".join(candidate.split())
+            if len(candidate) >= 3 and not any(w in candidate.lower() for w in ["business", "profession"]):
+                fields["full_name"] = candidate
+
+    if not str(fields.get("dob") or "").strip():
+        area = ""
+        area_match = re.search(r"d[ao]te\s*of\s*birth.{0,40}", compact1, flags=re.IGNORECASE)
+        if area_match:
+            area = area_match.group(0)
+        date_match = re.search(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b", area or compact1)
+        if date_match:
+            fields["dob"] = date_match.group(0)
+        else:
+            yr4 = re.search(r"\b(19\d{2}|20\d{2})\b", area or compact1)
+            if yr4:
+                fields["dob"] = yr4.group(1)
+            else:
+                yr3 = re.search(r"\b(\d{3})\b", area or "")
+                if yr3:
+                    y = yr3.group(1)
+                    fields["dob"] = f"1{y}" if y.startswith("9") else f"2{y}"
+
+    if not _normalize_mobile(str(fields.get("mobile") or "")):
+        mobile_block = re.search(r"m[oa]b\w*\s*no.{0,40}", compact1, flags=re.IGNORECASE)
+        if mobile_block:
+            mobile = _normalize_mobile(mobile_block.group(0))
+            if mobile:
+                fields["mobile"] = mobile
+        if not str(fields.get("mobile") or "").strip():
+            for token in re.findall(r"[0-9OIilo\-]{10,20}", compact1):
+                mobile = _normalize_mobile(token)
+                if mobile:
+                    fields["mobile"] = mobile
+                    break
+
+    current_business = str(fields.get("business_name") or "").strip().lower()
+    if not current_business or "name of" in current_business or "compony" in current_business:
+        match = re.search(
+            r"n[ao]me\s*of\s*(?:compa?n[yi]|business)\s*[:;]?\s*(.{2,80}?)(?:address|mobile|phone|$)",
+            compact2,
+            flags=re.IGNORECASE,
+        )
+        if match:
+            candidate = " ".join(re.sub(r"[^A-Za-z0-9&.,'\-\s]", " ", match.group(1)).split())
+            if len(candidate) >= 3:
+                fields["business_name"] = candidate
+
+
 def process_input_file(input_path: Path, target_form_path: Path | None = None):
     ocr_engine = build_ocr_engine()
     parsed = run_form_ocr_pipeline(
@@ -208,6 +290,7 @@ def process_input_file(input_path: Path, target_form_path: Path | None = None):
             parsed["tables"] = mapped.get("tables", {})
             parsed["signatures"] = mapped.get("signatures", {})
             parsed["stamps"] = mapped.get("stamps", {})
+            _enrich_fields_from_page_text(parsed)
             parsed["field_matches"] = [
                 {
                     "name": name,

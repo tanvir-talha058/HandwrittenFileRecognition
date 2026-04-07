@@ -1,3 +1,4 @@
+import re
 from typing import Dict, List
 
 from .checkbox_detector import detect_checkbox_state
@@ -26,6 +27,7 @@ class LoanFormParser:
         }
 
         self._parse_fields(pages_bgr, output)
+        self._enrich_key_fields_from_page_text(pages_bgr, output)
         self._parse_tables(pages_bgr, output)
         self._parse_signatures(pages_bgr, output)
         self._parse_stamps(pages_bgr, output)
@@ -95,6 +97,181 @@ class LoanFormParser:
                 best_text = text
 
         return best_text
+
+    @staticmethod
+    def _normalize_mobile(candidate: str) -> str:
+        raw = (
+            candidate.replace("O", "0")
+            .replace("o", "0")
+            .replace("I", "1")
+            .replace("i", "1")
+            .replace("l", "1")
+        )
+        digits = "".join(ch for ch in raw if ch.isdigit())
+        if len(digits) < 9:
+            return ""
+        if len(digits) > 13:
+            digits = digits[:13]
+        return digits
+
+    @staticmethod
+    def _clean_text_value(value: str) -> str:
+        cleaned = re.sub(r"\s+", " ", value or "").strip(" .:-\n\t")
+        return cleaned
+
+    @staticmethod
+    def _is_noisy_name(value: str) -> bool:
+        text = (value or "").lower()
+        if not text.strip():
+            return True
+        banned = ["business", "profession", "female", "male", "gender", "fomolo", "mot"]
+        return any(token in text for token in banned)
+
+    def _extract_page_text(self, page_img) -> str:
+        detections = self.ocr.read_page(page_img)
+        if not detections:
+            return ""
+        ordered = sorted(detections, key=self.ocr._detection_sort_key)
+        return "\n".join(item.get("text", "") for item in ordered if item.get("text"))
+
+    def _extract_full_name(self, text: str) -> str:
+        if not text:
+            return ""
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        start = -1
+        for idx, line in enumerate(lines):
+            if re.search(r"full\s*n[ao]me", line, flags=re.IGNORECASE):
+                start = idx
+                break
+        if start < 0:
+            return ""
+
+        tokens = []
+        stop_words = {
+            "profession",
+            "gender",
+            "gonoor",
+            "date",
+            "dote",
+            "education",
+            "marital",
+            "status",
+        }
+        for line in lines[start + 1 : start + 6]:
+            normalized = re.sub(r"[^a-z]", "", line.lower())
+            if any(word in normalized for word in stop_words):
+                break
+            cleaned = re.sub(r"[^A-Za-z.\s]", " ", line)
+            cleaned = self._clean_text_value(cleaned)
+            if cleaned:
+                tokens.append(cleaned)
+
+        candidate = self._clean_text_value(" ".join(tokens))
+        if len(candidate) < 3:
+            return ""
+        return candidate
+
+    def _extract_dob(self, text: str) -> str:
+        if not text:
+            return ""
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        area = ""
+        for idx, line in enumerate(lines):
+            if re.search(r"d[ao]te\s*of\s*birth", line, flags=re.IGNORECASE):
+                area = " ".join(lines[idx : idx + 4])
+                break
+        if not area:
+            area = text.replace("\n", " ")
+
+        date_match = re.search(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b", area)
+        if date_match:
+            return date_match.group(0)
+
+        year_match = re.search(r"\b(19\d{2}|20\d{2})\b", area)
+        if year_match:
+            return year_match.group(1)
+
+        compact = text.replace("\n", " ")
+        around_birth = re.search(r"birth.{0,40}?(\d{3,4})", compact, flags=re.IGNORECASE)
+        if around_birth:
+            year_text = around_birth.group(1)
+            if len(year_text) == 4:
+                return year_text
+            if len(year_text) == 3:
+                return f"1{year_text}" if year_text.startswith("9") else f"2{year_text}"
+
+        short_year = re.search(r"\b(\d{3})\b", area)
+        if short_year:
+            yr = short_year.group(1)
+            if yr.startswith("9"):
+                return f"1{yr}"
+            return f"2{yr}"
+        return ""
+
+    def _extract_mobile(self, text: str) -> str:
+        if not text:
+            return ""
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        for idx, line in enumerate(lines):
+            if re.search(r"m[oa]b\w*\s*no", line, flags=re.IGNORECASE):
+                best = ""
+                for probe in lines[idx : idx + 5]:
+                    candidate = self._normalize_mobile(probe)
+                    if len(candidate) in {10, 11} and candidate.startswith("01"):
+                        return candidate
+                    if len(candidate) > len(best):
+                        best = candidate
+                if best:
+                    return best
+
+        compact = text.replace("\n", " ")
+        match = re.search(r"(01[0-9OIil\s\-]{8,14})", compact)
+        if match:
+            return self._normalize_mobile(match.group(1))
+        return ""
+
+    def _extract_business_name(self, text: str) -> str:
+        if not text:
+            return ""
+        compact = text.replace("\n", " ")
+        match = re.search(
+            r"n[ao]me\s*of\s*(?:compa?n[yi]|business)\s*[:;]?\s*(.{2,80}?)(?:address|phone|mobile|profession|$)",
+            compact,
+            flags=re.IGNORECASE,
+        )
+        if not match:
+            return ""
+        value = self._clean_text_value(match.group(1))
+        if len(value) < 3:
+            return ""
+        return value
+
+    def _enrich_key_fields_from_page_text(self, pages_bgr, output: Dict):
+        fields = output.get("fields", {})
+        if not fields:
+            return
+
+        page1 = self._get_page(pages_bgr, 1)
+        page2 = self._get_page(pages_bgr, 2)
+
+        page1_text = self._extract_page_text(page1) if page1 is not None else ""
+        page2_text = self._extract_page_text(page2) if page2 is not None else ""
+
+        if self._is_noisy_name(str(fields.get("full_name") or "")):
+            fields["full_name"] = self._extract_full_name(page1_text)
+
+        if not fields.get("dob"):
+            fields["dob"] = self._extract_dob(page1_text)
+
+        mobile_value = self._normalize_mobile(str(fields.get("mobile") or ""))
+        if not mobile_value or not mobile_value.startswith("01"):
+            fields["mobile"] = self._extract_mobile(page1_text)
+
+        business_name = str(fields.get("business_name") or "").strip().lower()
+        if not business_name or "name of" in business_name or "compony" in business_name:
+            extracted_business_name = self._extract_business_name(page2_text)
+            if extracted_business_name:
+                fields["business_name"] = extracted_business_name
 
     def _parse_tables(self, pages_bgr, output: Dict):
         for table in self.mapper.get_table_regions():
